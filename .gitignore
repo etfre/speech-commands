@@ -1,0 +1,8 @@
+lib/
+libs/
+cx_Logging-doc/
+include/
+/scripts
+pyvenv.cfg
+/.vscode
+*.pyc
