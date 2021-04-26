@@ -47,19 +47,19 @@ mapping = {
     "return": Text("return "),
     "break": Text("break"),
     "continue": Text("continue"),
-    "name in": Text(" in "),
-    "name is": Text(" is "),
+    "in": Text(" in "),
+    "is": Text(" is "),
     "not": Text(" not "),
-    "name and": Text(" and "),
-    "name or": Text(" or "),
-    "name if": Text("if "),                    
-    "name while": Text("if "),                    
+    "and": Text(" and "),
+    "or": Text(" or "),
+    "if": Text("if "),                    
+    "while": Text("if "),                    
     "<errors>": Text("%(errors)s"),
     "if statement": "if :{left}",
     "if else": "if :\npass\nelse:\npass{up:3}{left}",
     "else if": "elif :{left}",
     "else statement": "else:{enter}",
-    "try except": "try:\npass\nexcept:\npass{up:2}{c-d}",
+    "try except": "try:{c-enter}pass{c-enter}except:{c-enter}pass{up:2}{c-d}",
     "true": Text("True"),
     "false": Text("False"),
     "none": Text("None"),
@@ -68,7 +68,7 @@ mapping = {
     "new function": "def ():{left:3}",
     "new method": "def (self):{left:7}",
     "new class": "class :{left}",
-    "name <functions>": "%(functions)s",
+    "<functions>": "%(functions)s",
     "call <functions>": "%(functions)s(){left}",
     "read file": "with open() as f:{left:7}",
     "write file": "with open(, 'w') as f:{left:12}",
@@ -81,7 +81,6 @@ mapping = {
     "while loop": "while :{left}",
     "string index": '[""]{left:2}',
 }
-
 
 def rule_builder():
     builder = rules.RuleBuilder()
