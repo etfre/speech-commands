@@ -95,9 +95,7 @@ non_repeat_mapping = {
     "surround double": surround('"', '"'),
     "call that": "(){left}",
     "new tab": "{c-n}",
-    "line <n>": between(
-        Key("c-g"), Function(lambda **k: Text(str(k["n"])).execute()), Key("enter")
-    ),
+    "go to line": "{c-g}",
     "split editor": "{c-backslash}",
     "close editor": "{c-f4}",
     **git_commands
