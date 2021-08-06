@@ -22,6 +22,7 @@ functions = {
     "sum": "sum",
     "super": "super",
     "update": "update",
+    "oh ess [dot] path [dot] join": "os.path.join"
 }
 
 errors = {
@@ -60,15 +61,17 @@ mapping = {
     "else if": "elif :{left}",
     "else statement": "else:{enter}",
     "try except": "try:{c-enter}pass{c-enter}except:{c-enter}pass{up:2}{c-d}",
+    "pass": "pass",
     "true": Text("True"),
     "false": Text("False"),
     "none": Text("None"),
+    "dictionary": "{{}}{left}",
     "dictionary": "{{}}{left}",
     "slice": "[:]{left:2}",
     "new function": "def ():{left:3}",
     "new method": "def (self):{left:7}",
     "new class": "class :{left}",
-    "<functions>": "%(functions)s",
+    "function <functions>": "%(functions)s",
     "call <functions>": "%(functions)s(){left}",
     "read file": "with open() as f:{left:7}",
     "write file": "with open(, 'w') as f:{left:12}",

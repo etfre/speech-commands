@@ -138,7 +138,7 @@ grammarCfg.cmd.map = Item(
         "(hold|press) control": Key("ctrl:down/3"),
         "release control": Key("ctrl:up"),
         "release [all]": release,
-        "single": Key("squote"),
+        "single": "{squote}",
         "double": Key("dquote"),
         "squiggle": Text("~"),
         "backtick": Key("backtick"),
@@ -154,11 +154,9 @@ grammarCfg.cmd.map = Item(
         "<char>": Key("%(char)s"),
         "<modifierSingle> <all_chars>": Key("%(modifierSingle)s:down")+ Key("%(all_chars)s") + Key("%(modifierSingle)s:up"),
         "<modifier1> <modifier2> <all_chars>": Key("%(modifier1)s:down") + Key("%(modifier2)s:down") + Key("%(all_chars)s") + Key("%(modifier2)s:up") + Key("%(modifier1)s:down") ,
-        "open angle": Key("langle"),
         "open brace": Key("lbrace"),
         "open bracket": Key("lbracket"),
         "open pen": Key("lparen"),
-        "close angle": Key("rangle"),
         "close brace": Key("rbrace"),
         "close bracket": Key("rbracket"),
         "close pen": Key("rparen"),
@@ -177,6 +175,8 @@ grammarCfg.cmd.map = Item(
         "undo": Key("c-z"),
         "redo": Key("c-y"),
         "number <digits>": Text("%(digits)s"),
+        "greater than": ">",
+        "less than": "<",
     },
     namespace={
         "Key": Key,
@@ -184,10 +184,7 @@ grammarCfg.cmd.map = Item(
     },
 )
 
-
-class KeystrokeRule(MappingRule):
-    exported = False
-    mapping = grammarCfg.cmd.map
+def root_rule():
     extras = [
         Dictation("text"),
         Dictation("text2"),
@@ -199,10 +196,4 @@ class KeystrokeRule(MappingRule):
         Choice("modifier2", singleModifierMap),
         Choice("modifierSingle", singleModifierMap),
     ]
-    defaults = {
-        "n": 1,
-    }
-
-
-def root_rule():
-    return KeystrokeRule(name="keystroke")
+    return rules.ParsedRule(mapping=grammarCfg.cmd.map, extras=extras, defaults={"n": 1}, name="Keystroke")

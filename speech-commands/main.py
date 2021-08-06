@@ -34,7 +34,6 @@ import javascript
 import vscode
 import visual_studio
 import bash
-import stardew
 import python_terminal
 import windows_terminal
 
