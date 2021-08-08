@@ -10,14 +10,6 @@ sites = {
     "something awful": "forums.somethingawful.com",
 }
 
-values = {
-    "list": "[]",
-    "dictionary": "{}",
-    "true": "True",
-    "false": "False",
-    "none": "None",
-}
-
 non_repeat_mapping = {
     "refresh": Key("f5"),
     "go to <sites>": Function(
@@ -54,15 +46,3 @@ def rule_builder():
         )
     )
     return builder
-
-
-# class PythonRule(MappingRule):
-#     mapping = {
-#         "import ":  Text(' import '),
-#     }
-#     extras = [ ]
-#     export=True
-#     context=AppContext(title='visual studio')
-
-# grammar.add_rule(PythonRule())
-# grammar.load()

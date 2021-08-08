@@ -10,8 +10,6 @@ from srabuilder import rules
 basic_mapping = {
     "language javascript": Function(lambda: contexts.set_language(contexts.JAVASCRIPT)),
     "language python": Function(lambda: contexts.set_language(contexts.PYTHON)),
-    "using visual studio code": Function(lambda: contexts.set_manual_app_context(contexts.VISUAL_STUDIO_CODE)),
-    "using default": Function(lambda: contexts.set_manual_app_context(None)),
     "launch wsl": Text("wsl.exe") + Key("enter"),
 }
 

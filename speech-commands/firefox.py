@@ -26,6 +26,7 @@ non_repeat_mapping = {
         ).execute()
     ),
     "navigate": Key("c-l"),
+    "new tab": "{c-t}",
 }
 
 repeat_mapping = {
@@ -41,10 +42,9 @@ def rule_builder():
     builder = rules.RuleBuilder()
     extras = [Choice("sites", sites)]
     builder.basic.append(
-        MappingRule(
+        rules.ParsedRule(
             mapping=non_repeat_mapping,
             extras=extras,
-            exported=False,
             name="firefox_non_repeat",
         )
     )
