@@ -25,6 +25,9 @@ from dragonfly.log import setup_log
 from srabuilder import sleep, environment
 import srabuilder
 
+logging.basicConfig(level=logging.INFO)
+engine = srabuilder.setup_engine(expected_error_rate_threshold=0.01)
+
 import contexts
 import global_
 import python
@@ -69,8 +72,7 @@ def command_line_loop(engine):
 
 
 def main(args):
-    logging.basicConfig(level=logging.INFO)
-    engine = srabuilder.setup_engine(expected_error_rate_threshold=0.01)
+
 
     # Register a recognition observer
     observer = Observer()

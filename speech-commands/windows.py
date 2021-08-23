@@ -1,4 +1,6 @@
+import os
 from dragonfly import *
+from dragonfly.windows.win32_window import Win32Window
 from srabuilder import rules
 import contexts
 import applications
@@ -11,11 +13,21 @@ def open_app(**kw):
     # just using title, executables can be finicky with aliases
     app = kw["applications"]
     index = kw["n"] - 1
-    FocusWindow(title=app.get("title"), index=index).execute()
+    title = app.get('title', [])
+    titles = title if isinstance(title, (list, tuple)) else [title]
+    matches = []
+    for t in titles:
+        matches.extend(Win32Window.get_matching_windows(title=t))
+    matches[index].set_foreground()
+    # FocusWindow(title=app.get("title"), index=index).execute()
 
 
 def start_app(**kw):
-    StartApp(kw["applications"]["executable"]).execute()
+    exe = kw["applications"]["executable"]
+    if exe == 'cmd.exe':
+        os.system('start cmd.exe')
+    else:
+        StartApp(exe).execute()
 
 
 non_repeat_mapping = {

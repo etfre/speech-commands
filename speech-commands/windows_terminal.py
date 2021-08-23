@@ -24,6 +24,7 @@ basic = {
     "new editor right": Key("as-plus"),
     "new editor down": Key("as-minus"),
     "close editor": Key("cs-w"),
+    "new tab": Key("cs-t"),
     "focus <directions>": Key("a-%(directions)s"),
 }
 

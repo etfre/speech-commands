@@ -1,5 +1,7 @@
 import time
+import utils
 from dragonfly import *
+from breathe import Breathe
 from srabuilder.actions import surround, between
 from srabuilder import rules
 
@@ -85,6 +87,7 @@ non_repeat_mapping = {
     "block comment": "{as-a}",
     "fuzzy": "{c-p}",
     "save file": "{c-s}",
+    "open recent": "{c-r}",
     "(search file) | (file search)": "{c-f}",
     "(search project) | (project search)": "{cs-f}",
     "(replace [in] file) | (file replace)": "{c-h}",
@@ -125,25 +128,34 @@ repeat_mapping = {
     "jump": Text(", "),
 }
 
-
 def rule_builder():
     builder = rules.RuleBuilder()
-    builder.basic.append(
-        rules.ParsedRule(
-            mapping=non_repeat_mapping,
-            name="vscode_non_repeat",
-            extras=[
-                rules.num,
-                Choice("clip", clip),
-                Choice("movements_multiple", movements_multiple),
-                Choice("select_actions_multiple", select_actions_multiple),
-                Choice("movements", movements),
-                Choice("select_actions_single", select_actions_single),
-            ],
-            defaults={"n": 1},
-        )
-    )
-    builder.repeat.append(
-        rules.ParsedRule(mapping=repeat_mapping, name="vscode_repeat")
-    )
+    # builder.basic.append(
+    #     rules.ParsedRule(
+    #         mapping=non_repeat_mapping,
+    #         name="vscode_non_repeat",
+    #         extras=[
+    #             rules.num,
+    #             Choice("clip", clip),
+    #             Choice("movements_multiple", movements_multiple),
+    #             Choice("select_actions_multiple", select_actions_multiple),
+    #             Choice("movements", movements),
+    #             Choice("select_actions_single", select_actions_single),
+    #         ],
+    #         defaults={"n": 1},
+    #     )
+    # )
     return builder
+
+utils.load_commands(
+    None,
+    commands=non_repeat_mapping,
+    extras=[
+        Choice("clip", clip),
+        Choice("movements_multiple", movements_multiple),
+        Choice("select_actions_multiple", select_actions_multiple),
+        Choice("movements", movements),
+        Choice("select_actions_single", select_actions_single),
+    ]
+)
+utils.load_commands(None, repeat_commands=repeat_mapping)
