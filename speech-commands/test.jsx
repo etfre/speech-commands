@@ -17,8 +17,18 @@ function fizzbuzz() {
 
 fizzbuzz()
 for (let i = 0; i < 10; i++) {
-    for (const x of ) {
-        
-    }
 
 }
+import React from 'react';
+
+const test = () => {
+    return (
+        <div>
+            
+        </div>
+    );
+}
+
+export default test;
+
+<button ></button>

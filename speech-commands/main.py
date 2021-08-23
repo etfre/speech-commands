@@ -39,6 +39,7 @@ import visual_studio
 import bash
 import python_terminal
 import windows_terminal
+import react
 
 
 # --------------------------------------------------------------------------

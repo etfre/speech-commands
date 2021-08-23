@@ -6,7 +6,7 @@ JAVASCRIPT = "javascript"
 
 VISUAL_STUDIO_CODE = "VISUAL_STUDIO_CODE"
 
-language = PYTHON
+language = None
 manual_app_context = None
 
 def title_and_manual_context(spoken: str):
@@ -31,5 +31,6 @@ chrome = title_and_manual_context("chrome")
 # git_bash = title_and_manual_context("mingw64")
 # bash = windows_terminal | git_bash
 bash = title_and_manual_context("terminal")
-javascript = FuncContext(lambda *a: language == JAVASCRIPT)
-python = FuncContext(lambda *a: language == PYTHON)
+javascript = vscode & (AppContext(title=".js") | AppContext(title=".ts") | FuncContext(lambda *a: language == JAVASCRIPT))
+react = javascript & (AppContext(title=".jsx") | AppContext(title=".tsx")) 
+python = vscode & (AppContext(title=".py") | FuncContext(lambda *a: language == PYTHON))
