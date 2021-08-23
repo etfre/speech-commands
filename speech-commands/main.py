@@ -87,7 +87,6 @@ def main(args):
         (contexts.bash,): bash.rule_builder()
         .merge(python_terminal.rule_builder())
         .merge(windows_terminal.rule_builder()),
-        (contexts.vscode,): vscode.rule_builder(),
         (contexts.vscode, contexts.python): python.rule_builder(),
         (contexts.vscode, contexts.javascript): javascript.rule_builder(),
         (contexts.visual_studio,): visual_studio.rule_builder(),

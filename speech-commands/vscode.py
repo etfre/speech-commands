@@ -1,5 +1,6 @@
 import time
 import utils
+import contexts
 from dragonfly import *
 from breathe import Breathe
 from srabuilder.actions import surround, between
@@ -98,7 +99,8 @@ non_repeat_mapping = {
     "surround double": surround('"', '"'),
     "call that": "(){left}",
     "new tab": "{c-n}",
-    "line <n>": between(Key("c-g"), Function(lambda **k: Text(str(k["n"])).execute())),
+    "line <n>": between(Key("c-g"), Function(lambda **k: Text(str(k["n"])).execute()), Key('enter')),
+    "go to line": "{c-g}",
     "split editor": "{c-backslash}",
     "close editor": "{c-f4}",
     **git_commands
@@ -148,7 +150,7 @@ def rule_builder():
     return builder
 
 utils.load_commands(
-    None,
+    contexts.vscode,
     commands=non_repeat_mapping,
     extras=[
         Choice("clip", clip),
@@ -158,4 +160,4 @@ utils.load_commands(
         Choice("select_actions_single", select_actions_single),
     ]
 )
-utils.load_commands(None, repeat_commands=repeat_mapping)
+utils.load_commands(contexts.vscode, repeat_commands=repeat_mapping)

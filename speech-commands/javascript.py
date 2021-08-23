@@ -9,50 +9,46 @@ functions = {
 }
 
 values = {
-    "array": "[]",
-    "object": "{}",
+
+}
+
+mapping = {
+    "let": "let ",
+    "const": "const ",
+    "if statement":"if () {{}}{left}{enter}{up}{end}{left:3}",
+    "while loop":"while () {{}}{left}{enter}{up}{end}{left:3}",
+    "for loop":"for (const x of ) {{}}{left}{enter}{up}{end}{left:3}",
+    "for range":"for (let i = 0; i < ; i++) {{}}{left}{enter}{up}{end}{left:8}",
+    "else if statement": "else if () {{}}{left}{enter}{up}{end}{left:3}",
+    "else statement": "else {{}}{left}{enter}",
+    "assign": " = ",
+    "double compare": " == ",
+    "compare": " === ",
+    "not": "!",
+    "and": " && ",
+    "or": " || ",
     "true": "true",
     "false": "false",
     "null": "null",
-}
-
-def withScope(text):
-    srabuilder.actions.type_and_move("if () {}", left=1) + srabuilder.actions.between(
-        Key("enter"), Key("up"), Key("end"), Key("left:3")
-    )
-
-
-mapping = {
-    "let": Text("let "),
-    "const": Text("const "),
-    "if statement": srabuilder.actions.type_and_move("if () {}", left=1)
-    + srabuilder.actions.between(Key("enter"), Key("up"), Key("end"), Key("left:3")),
-    "while loop": srabuilder.actions.type_and_move("while () {}", left=1)
-    + srabuilder.actions.between(Key("enter"), Key("up"), Key("end"), Key("left:3")),
-    "for loop": srabuilder.actions.type_and_move("for (let x of ) {}", left=1)
-    + srabuilder.actions.between(Key("enter"), Key("up"), Key("end"), Key("left:3")),
-    "assign": Text(" = "),
-    "compare": Text("=="),
-    "triple compare": Text("==="),
-    "not": Text("!"),
-    "and": Text(" && "),
-    "or": Text(" || "),
-    "true": Text("true"),
-    "false": Text("false"),
-    "null": Text("null"),
     "await": "await ",
     "a sink": "async ",
     "new": "new ",
+    "return": "return ",
     "new scope": "{{}}{left}{enter}",
-    "new function": "function () {{}}{left}{enter}{up}{end}{left:5}",
+    "new function": "function () {{}}{left}{enter}{up}{end}{left:4}",
+    "new arrow function": "() => ",
     "new method": srabuilder.actions.type_and_move("def (self and m):", left=2),
     "new class": "class  {{}}{left}{enter}{up}{home}{left:6}",
-    "else if [statement]": "else if () {{}}{left}{enter}{up}{end}{left:3}",
-    "else [statement]": "else {{}}{left}{enter}",
-    "new class": "class  {{}}{left}{enter}{up}{home}{left:6}",
-    "<functions>": Text("%(functions)s"),
-    "call <functions>": Text("%(functions)s()"),
-    "<values>": Text("%(values)s"),
+    "function <functions>": "%(functions)s",
+    "call <functions>": "%(functions)s()",
+    "array": "[]{left}",
+    "object": "{{}}{left}",
+    "true": "true",
+    "false": "false",
+    "null": "null",
+    "string": "''{left}",
+    "double string": '""{left}',
+    "template string": '``{left}',
 }
 def rule_builder():
     builder = rules.RuleBuilder()
