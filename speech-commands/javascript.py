@@ -2,6 +2,10 @@ from dragonfly import *
 import srabuilder.actions
 from srabuilder import rules
 
+import utils
+import contexts
+
+
 functions = {
     "console [dot] log": "console.log",
     "length": "length",
@@ -28,9 +32,9 @@ mapping = {
     "assign": " = ",
     "double compare": " == ",
     "compare": " === ",
-    "not": "!",
-    "and": " && ",
-    "or": " || ",
+    "say not": "!",
+    "say and": " && ",
+    "say or": " || ",
     "true": "true",
     "false": "false",
     "null": "null",
@@ -47,7 +51,7 @@ mapping = {
     "new arrow function": "() => ",
     "new method": "() {{}}{left}{enter}{up}{end}{left:4}",
     "new class": "class  {{}}{left}{enter}constructor() {{}}{left}{enter}{up:2}{end}{left:2}",
-    "function <functions>": "%(functions)s",
+    "name <functions>": "%(functions)s",
     "call <functions>": "%(functions)s(){left}",
     "array": "[]{left}",
     "object": "{{}}{left}",
@@ -62,9 +66,11 @@ mapping = {
     "constructor": "constructor",
     "type": "type ",
     "key of": "keyof ",
+    "annotate": ": ",
+    "type number": "number",
+    "type string": "string",
+    "implements": "implements ",
 }
-def rule_builder():
-    builder = rules.RuleBuilder()
-    extras = [Choice("functions", functions)]
-    builder.basic.append(rules.ParsedRule(mapping=mapping, extras=extras))
-    return builder
+
+extras = [Choice("functions", functions)]
+utils.load_commands(contexts.javascript, commands=mapping, extras=extras)

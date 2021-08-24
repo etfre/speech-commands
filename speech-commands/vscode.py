@@ -99,7 +99,7 @@ non_repeat_mapping = {
     "surround double": surround('"', '"'),
     "call that": "(){left}",
     "new tab": "{c-n}",
-    "line <n>": between(Key("c-g"), Function(lambda **k: Text(str(k["n"])).execute()), Key('enter')),
+    "go to line <n>": between(Key("c-g"), Function(lambda **k: Text(str(k["n"])).execute()), Key('enter')),
     "go to line": "{c-g}",
     "split editor": "{c-backslash}",
     "close editor": "{c-f4}",
@@ -129,25 +129,6 @@ repeat_mapping = {
     "move editor left": "{c-k}{right}",
     "jump": Text(", "),
 }
-
-def rule_builder():
-    builder = rules.RuleBuilder()
-    # builder.basic.append(
-    #     rules.ParsedRule(
-    #         mapping=non_repeat_mapping,
-    #         name="vscode_non_repeat",
-    #         extras=[
-    #             rules.num,
-    #             Choice("clip", clip),
-    #             Choice("movements_multiple", movements_multiple),
-    #             Choice("select_actions_multiple", select_actions_multiple),
-    #             Choice("movements", movements),
-    #             Choice("select_actions_single", select_actions_single),
-    #         ],
-    #         defaults={"n": 1},
-    #     )
-    # )
-    return builder
 
 utils.load_commands(
     contexts.vscode,

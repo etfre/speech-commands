@@ -11,6 +11,7 @@ tags = {
     'button': 'button',
     'canvas': 'canvas',
     'div': 'div',
+    'empty': '',
     'heading one': 'h1',
     'heading too': 'h2',
     'heading three': 'h3',

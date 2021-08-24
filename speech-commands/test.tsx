@@ -1,4 +1,5 @@
 class f {
+     &&  || !
     constructor() {
 
     }
@@ -17,5 +18,15 @@ class f {
 class CriticalRace {
     constructor() {
 
+    }   
+}
+
+class HelloWorld implements b {
+    constructor() {
+
+    }
+
+    sum(a: number, b: number) {
+        return a + b;
     }
 }

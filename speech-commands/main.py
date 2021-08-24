@@ -1,18 +1,3 @@
-"""
-Command-module loader for Kaldi.
-
-This script is based on 'dfly-loader-wsr.py' written by Christo Butcher and
-has been adapted to work with the Kaldi engine instead.
-
-This script can be used to look for Dragonfly command-modules for use with
-the Kaldi engine. It scans the directory it's in and loads any ``_*.py`` it
-finds.
-"""
-
-
-# TODO Have a simple GUI for pausing, resuming, cancelling and stopping
-# recognition, etc
-
 import os.path
 import os
 import threading
@@ -26,7 +11,7 @@ from srabuilder import sleep, environment
 import srabuilder
 
 logging.basicConfig(level=logging.INFO)
-engine = srabuilder.setup_engine(expected_error_rate_threshold=0.01)
+engine = srabuilder.setup_engine(expected_error_rate_threshold=0.01, lexicon_path="..\\user_lexicon.txt")
 
 import contexts
 import global_
@@ -40,6 +25,7 @@ import bash
 import node_terminal
 import python_terminal
 import windows_terminal
+import keyboard
 import react
 import css
 
@@ -90,8 +76,6 @@ def main(args):
         (contexts.bash,): bash.rule_builder()
         .merge(python_terminal.rule_builder())
         .merge(windows_terminal.rule_builder()),
-        (contexts.vscode, contexts.python): python.rule_builder(),
-        (contexts.vscode, contexts.javascript): javascript.rule_builder(),
         (contexts.visual_studio,): visual_studio.rule_builder(),
     }
     srabuilder.load_environment_grammars(map_contexts_to_builder)

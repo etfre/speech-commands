@@ -12,6 +12,8 @@
 
 from dragonfly import *
 
+import utils
+
 try:
     from dragonfly.actions.keyboard import keyboard
     from dragonfly.actions.typeables import typeables
@@ -47,7 +49,7 @@ specialCharMap = {
     "ampersand": "&",
     "slash": "/",
     "(equal|equals)": "=",
-    "plus": "+",
+    "addition": "+",
     "space": " ",
     "exclamation": "!",
     "question": "?",
@@ -114,6 +116,17 @@ letterMap = {
 
 all_chars = {**letterMap, **specialCharMap}
 
+operators = {
+    "plus": "+",
+    "minus": "-",
+    "times": "*",
+    "divide": "/",
+    "floor divide": "//",
+    "modulo": "%",
+    "greater than": ">",
+    "less than": "<",
+}
+
 # generate uppercase versions of every letter
 upperLetterMap = {}
 for letter in letterMap:
@@ -121,76 +134,69 @@ for letter in letterMap:
 letterMap.update(upperLetterMap)
 
 
-grammarCfg = Config("multi edit")
-grammarCfg.cmd = Section("Language section")
-grammarCfg.cmd.map = Item(
-    {
-        # Navigation keys.
-        "application key": release + Key("apps/3"),
-        "win key": release + Key("win/3"),
-        "copy that": release + Key("c-c"),
-        "cut that": release + Key("c-x"),
-        "paste that": release + Key("c-v"),
-        "(hold|press) alt": Key("alt:down/3"),
-        "release alt": Key("alt:up"),
-        "(hold|press) shift": Key("shift:down/3"),
-        "release shift": Key("shift:up"),
-        "(hold|press) control": Key("ctrl:down/3"),
-        "release control": Key("ctrl:up"),
-        "release [all]": release,
-        "single": "{squote}",
-        "double": Key("dquote"),
-        "squiggle": Text("~"),
-        "backtick": Key("backtick"),
-        "colon": Key("colon"),
-        "(semicolon|semi colon)": ";",
-        "comma": Key("comma"),
-        "dash": Key("hyphen"),
-        "downscore": Key("underscore"),
-        "<letters>": Text("%(letters)s"),
-        "<char>": Key("%(char)s"),
-        "<modifierSingle> <all_chars>": "{%(modifierSingle)s:down}{%(all_chars)s}{%(modifierSingle)s:up}",
-        "<modifier1> <modifier2> <all_chars>": Key("%(modifier1)s:down") + Key("%(modifier2)s:down") + Key("%(all_chars)s") + Key("%(modifier2)s:up") + Key("%(modifier1)s:down") ,
-        "open brace": Key("lbrace"),
-        "open bracket": Key("lbracket"),
-        "open pen": "(",
-        "close brace": Key("rbrace"),
-        "close bracket": Key("rbracket"),
-        "close pen": Key("rparen"),
-        "parentheses": Text("()"),
-        "brackets": Text("[]"),
-        "braces": Text("{}"),
-        "escape": Key("escape"),
-        "comma": Key("comma"),
-        "home key": Key("home"),
-        "end key": Key("end"),
-        "delete": Key("del"),
-        "snipe ": Key("backspace"),
-        "before": Key("c-left"),
-        "after": Key("c-right"),
-        "hexadecimal": Text("0x"),
-        "undo": Key("c-z"),
-        "redo": Key("c-y"),
-        "number <digits>": Text("%(digits)s"),
-        "greater than": ">",
-        "less than": "<",
-    },
-    namespace={
-        "Key": Key,
-        "Text": Text,
-    },
-)
+grammarCfg = {
+    # Navigation keys.
+    "application key": release + Key("apps/3"),
+    "win key": release + Key("win/3"),
+    "copy that": release + Key("c-c"),
+    "cut that": release + Key("c-x"),
+    "paste that": release + Key("c-v"),
+    "(hold|press) alt": Key("alt:down/3"),
+    "release alt": Key("alt:up"),
+    "(hold|press) shift": Key("shift:down/3"),
+    "release shift": Key("shift:up"),
+    "(hold|press) control": Key("ctrl:down/3"),
+    "release control": Key("ctrl:up"),
+    "release [all]": release,
+    "single": "{squote}",
+    "double": Key("dquote"),
+    "squiggle": Text("~"),
+    "backtick": Key("backtick"),
+    "colon": Key("colon"),
+    "(semicolon|semi colon)": ";",
+    "comma": Key("comma"),
+    "dash": Key("hyphen"),
+    "downscore": Key("underscore"),
+    "<letters>": Text("%(letters)s"),
+    "<char>": Key("%(char)s"),
+    "<modifierSingle> <all_chars>": "{%(modifierSingle)s:down}{%(all_chars)s}{%(modifierSingle)s:up}",
+    "<modifier1> <modifier2> <all_chars>": Key("%(modifier1)s:down") + Key("%(modifier2)s:down") + Key("%(all_chars)s") + Key("%(modifier2)s:up") + Key("%(modifier1)s:down") ,
+    "open brace": Key("lbrace"),
+    "open bracket": Key("lbracket"),
+    "open pen": "(",
+    "close brace": Key("rbrace"),
+    "close bracket": Key("rbracket"),
+    "close pen": Key("rparen"),
+    "parentheses": Text("()"),
+    "brackets": Text("[]"),
+    "braces": Text("{}"),
+    "escape": Key("escape"),
+    "comma": Key("comma"),
+    "home key": Key("home"),
+    "end key": Key("end"),
+    "delete": Key("del"),
+    "snipe ": Key("backspace"),
+    "before": Key("c-left"),
+    "after": Key("c-right"),
+    "hexadecimal": Text("0x"),
+    "undo": Key("c-z"),
+    "redo": Key("c-y"),
+    "number <digits>": Text("%(digits)s"),
+    "<operators>": " %(operators)s ",
+    "short <operators>": "%(operators)s",
+}
 
-def root_rule():
-    extras = [
-        Dictation("text"),
-        Dictation("text2"),
-        Choice("char", specialCharMap),
-        Choice("letters", letterMap),
-        Choice("all_chars", all_chars),
-        rules.digits,
-        Choice("modifier1", singleModifierMap),
-        Choice("modifier2", singleModifierMap),
-        Choice("modifierSingle", singleModifierMap),
-    ]
-    return rules.ParsedRule(mapping=grammarCfg.cmd.map, extras=extras, defaults={"n": 1}, name="Keystroke")
+extras = [
+    Dictation("text"),
+    Dictation("text2"),
+    Choice("char", specialCharMap),
+    Choice("letters", letterMap),
+    Choice("all_chars", all_chars),
+    rules.digits,
+    Choice("modifier1", singleModifierMap),
+    Choice("modifier2", singleModifierMap),
+    Choice("modifierSingle", singleModifierMap),
+    Choice("operators", operators),
+]
+
+utils.load_commands(None, repeat_commands=grammarCfg, extras=extras)

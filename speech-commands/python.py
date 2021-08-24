@@ -1,14 +1,18 @@
 from dragonfly import *
 from srabuilder import rules
+import utils
+import contexts
 
 functions = {
     "all": "all",
     "any": "any",
+    "default (dictionary | dict)": "defaultdict",
     "enumerate": "enumerate",
     "eye d": "id",
     "float": "float",
     "input": "input",
     "int": "int",
+    "iter": "iter",
     "join": "join",
     "length": "len",
     "list": "list",
@@ -17,12 +21,14 @@ functions = {
     "print": "print",
     "range": "range",
     "reversed": "reversed",
+    "set": "set",
     "slice": "slice",
     "sorted": "sorted",
     "split": "split",
     "string": "str",
     "sum": "sum",
     "super": "super",
+    "two pull": "tuple",
     "update": "update",
     "oh ess [dot] path [dot] join": "os.path.join"
 }
@@ -40,8 +46,34 @@ errors = {
     "value error": "ValueError",
 }
 
+modules = {
+    'arg parse': 'argparse',
+    'collections': 'collections',
+    '(jay son | jay saw n)': 'json',
+    'logging': 'logging',
+    'eye oh': 'io',
+    's h you till': 'shutil',
+    'time': 'time',
+    'sis': 'sys',
+    'o s': "os",
+    'o s [dot] path': "os.path",
+    'multi processing': 'multiprocessing',
+    'a sink eye oh': 'asyncio',
+    'queue': 'queue',
+    'threading': 'threading',
+    'unit test': 'unittest',
+    'requests': 'requests',
+    'types': 'types',
+    'typing': 'typing',
+    'regular (expression | expressions)': 're',
+    "sea ess v": "csv",
+    "iter tools": "itertools",
+}
+
 mapping = {
     "import": Text("import "),
+    "import <modules>": "import %(modules)s",
+    "name <modules>": "%(modules)s",
     "assign": Text(" = "),
     "compare": Text(" == "),
     "list comprehension": "[x for x in ]{left}",
@@ -50,12 +82,13 @@ mapping = {
     "return": Text("return "),
     "break": Text("break"),
     "continue": Text("continue"),
-    "in": Text(" in "),
-    "is": Text(" is "),
-    "not": Text(" not "),
-    "and": Text(" and "),
-    "or": Text(" or "),
+    "say in": Text(" in "),
+    "say is": Text(" is "),
+    "say not": Text("not "),
+    "say and": Text(" and "),
+    "say or": Text(" or "),
     "<errors>": "%(errors)s",
+    "if expression": " if  else {left:10}",
     "if statement": "if :{left}",
     "while loop": "while :{left}",
     "else statement": "else:{enter}",
@@ -71,7 +104,7 @@ mapping = {
     "new function": "def ():{left:3}",
     "new method": "def (self):{left:7}",
     "new class": "class :{enter}def __init__(self):{enter}pass{up:2}{end}{left}",
-    "function <functions>": "%(functions)s",
+    "name <functions>": "%(functions)s",
     "call <functions>": "%(functions)s(){left}",
     "read file": "with open() as f:{left:7}",
     "write file": "with open(, 'w') as f:{left:12}",
@@ -81,11 +114,12 @@ mapping = {
     "with as": "with  as :{left:5}",
     "for loop": "for :{left}",
     "for enumerate": "for i,  in enumerate():{left:16}",
+    "index": "[]{left}",
     "string index": '[""]{left:2}',
+    "string": "''{left}",
+    "double string": '""{left}',
+    "f string": "f''{left}",
+    "double f string": 'f""{left}',
 }
-
-def rule_builder():
-    builder = rules.RuleBuilder()
-    extras = [Choice("functions", functions), Choice("errors", errors)]
-    builder.basic.append(rules.ParsedRule(mapping=mapping, extras=extras))
-    return builder
+extras = [Choice("functions", functions), Choice("errors", errors), Choice('modules', modules)]
+utils.load_commands(contexts.python, commands=mapping, extras=extras)
