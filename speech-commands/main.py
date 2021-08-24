@@ -37,9 +37,11 @@ import javascript
 import vscode
 import visual_studio
 import bash
+import node_terminal
 import python_terminal
 import windows_terminal
 import react
+import css
 
 
 # --------------------------------------------------------------------------

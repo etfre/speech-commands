@@ -17,6 +17,9 @@ def camel_case(words):
     return words[0] + "".join([x.title() for x in words[1:]])
 
 
+def one_word(words):
+    return "".join(words)
+
 def hyphen_case(words):
     parsed = "-".join(words)
     return parsed
@@ -59,6 +62,7 @@ def load_grammar():
         "dictate capital <dictation>": Function(
             lambda dictation: do_dictation(dictation)
         ),
+        "word <dictation>": dictation_wrap(one_word),
         "snake <dictation>": dictation_wrap(snake_case),
         "snake capital <dictation>": dictation_wrap(capital_snake_case),
         "hyphen <dictation>": dictation_wrap(hyphen_case),

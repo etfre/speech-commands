@@ -7,8 +7,31 @@ from srabuilder.actions import surround, between
 from srabuilder import rules
 
 tags = {
+    'body': 'body',
     'button': 'button',
+    'canvas': 'canvas',
     'div': 'div',
+    'heading one': 'h1',
+    'heading too': 'h2',
+    'heading three': 'h3',
+    'heading four': 'h4',
+    'heading five': 'h5',
+    'heading six': 'h6',
+    'hyperlink': 'a',
+    'image': 'img',
+    'input': 'input',
+    'label': 'label',
+    'line break': 'br',
+    'list item': 'li',
+    'ordered list': 'ol',
+    'paragraph': 'p',
+    'span': 'span',
+    'table': 'table',
+    'unordered list': 'ul',
+}
+
+attributes = {
+
 }
 
 def full_tag(**kw):

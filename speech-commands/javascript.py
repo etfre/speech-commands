@@ -10,7 +10,7 @@ functions = {
     "set interval": "setInterval",
     "fetch": "fetch",
     "get element by id": "getElementById",
-    "sort": "sorted",
+    "sort": "sort",
     "has own property": "hasOwnProperty",
 }
 
@@ -38,15 +38,15 @@ mapping = {
     "document": "document",
     "await": "await ",
     "a sink": "async ",
-    "new": "new ",
+    "new statement": "new ",
     "return": "return ",
     "break": "break",
     "continue": "continue",
     "new scope": "{{}}{left}{enter}",
     "new function": "function () {{}}{left}{enter}{up}{end}{left:4}",
     "new arrow function": "() => ",
-    "new method": srabuilder.actions.type_and_move("def (self and m):", left=2),
-    "new class": "class  {{}}{left}{enter}{up}{home}{left:6}",
+    "new method": "() {{}}{left}{enter}{up}{end}{left:4}",
+    "new class": "class  {{}}{left}{enter}constructor() {{}}{left}{enter}{up:2}{end}{left:2}",
     "function <functions>": "%(functions)s",
     "call <functions>": "%(functions)s(){left}",
     "array": "[]{left}",
@@ -57,6 +57,11 @@ mapping = {
     "string": "''{left}",
     "double string": '""{left}',
     "template string": '``{left}',
+    "export": "export ",
+    "interface": "interface ",
+    "constructor": "constructor",
+    "type": "type ",
+    "key of": "keyof ",
 }
 def rule_builder():
     builder = rules.RuleBuilder()
