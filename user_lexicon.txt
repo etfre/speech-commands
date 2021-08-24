@@ -13,5 +13,8 @@ axeman { k s m { n
 div d I v
 unordered V n O r d 3 d
 arg 'A r g
+args 'A r g z
+kwargs k w 'A r g z
 dict d I k t
 iter 'I t 3
+dunder d 'V n d 3

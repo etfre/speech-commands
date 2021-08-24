@@ -4,24 +4,39 @@ import utils
 import contexts
 
 functions = {
+    "absolute": "abs",
     "all": "all",
     "any": "any",
+    "boolean": "bool",
+    "callable": "callable",
     "default (dictionary | dict)": "defaultdict",
+    "dear": "dir",
+    "delete attribute": "delattr",
     "enumerate": "enumerate",
     "eye d": "id",
+    "filter": "filter",
     "float": "float",
+    "format": "format",
+    "global's": "globals",
+    "get attribute": "getattr",
     "input": "input",
     "int": "int",
-    "iter": "iter",
+    "is instance": "isinstance",
+    "it er": "iter",
     "join": "join",
     "length": "len",
     "list": "list",
+    "locals": "locals",
     "min": "min",
     "max": "max",
+    "object": "object",
+    "open": "open",
     "print": "print",
     "range": "range",
     "reversed": "reversed",
+    "round": "round",
     "set": "set",
+    "set attribute": "setattr",
     "slice": "slice",
     "sorted": "sorted",
     "split": "split",
@@ -30,7 +45,8 @@ functions = {
     "super": "super",
     "two pull": "tuple",
     "update": "update",
-    "oh ess [dot] path [dot] join": "os.path.join"
+    "oh ess [dot] path [dot] join": "os.path.join",
+    "zip": "zip",
 }
 
 errors = {
@@ -67,7 +83,14 @@ modules = {
     'typing': 'typing',
     'regular (expression | expressions)': 're',
     "sea ess v": "csv",
-    "iter tools": "itertools",
+    "it er tools": "itertools",
+    "funk tools": "functools",
+    "statistics": "statistics",
+    "random": "random",
+    "math": "math",
+    "copy": "copy",
+    "weak ref": "weakref",
+    "date time": "datetime",
 }
 
 mapping = {
@@ -102,9 +125,11 @@ mapping = {
     "dictionary": "{{}}{left}",
     "slice": "[:]{left:2}",
     "new function": "def ():{left:3}",
+    "new lambda": "lambda :{left}",
     "new method": "def (self):{left:7}",
     "new class": "class :{enter}def __init__(self):{enter}pass{up:2}{end}{left}",
     "name <functions>": "%(functions)s",
+    "under <functions>": "__%(functions)s__",
     "call <functions>": "%(functions)s(){left}",
     "read file": "with open() as f:{left:7}",
     "write file": "with open(, 'w') as f:{left:12}",
@@ -120,6 +145,8 @@ mapping = {
     "double string": '""{left}',
     "f string": "f''{left}",
     "double f string": 'f""{left}',
+    "args": '*args',
+    "kwargs": '**kwargs',
 }
 extras = [Choice("functions", functions), Choice("errors", errors), Choice('modules', modules)]
 utils.load_commands(contexts.python, commands=mapping, extras=extras)
