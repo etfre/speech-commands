@@ -3,4 +3,3 @@ def is_odd(n):
         return False
     elif n % 2 == 0:
         return True
-print('')
