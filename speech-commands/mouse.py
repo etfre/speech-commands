@@ -23,32 +23,24 @@ except:
 
 from srabuilder import rules
 
-grammarCfg = Config("multi edit")
-grammarCfg.cmd = Section("Language section")
-grammarCfg.cmd.map = Item(
-    {
-        "(mouse | left) click": Mouse("left"),
-        "(mouse | left) hold": Mouse("left:down"),
-        "(mouse | left) release": Mouse("left:up"),
-        "right hold": Mouse("left:down"),
-        "right release": Mouse("left:up"),
-        "double click": Mouse("left:2"),
-        "right click": Mouse("right"),
-        "mouse up": Function(lambda **kw: Mouse(f"<0, {kw['n'] * -5}>").execute()),
-        "mouse right": Function(lambda **kw: Mouse(f"<{kw['n'] * 5}, 0>").execute()),
-        "mouse down": Function(lambda **kw: Mouse(f"<0, {kw['n'] * 5}>").execute()),
-        "mouse left": Function(lambda **kw: Mouse(f"<{kw['n'] * -5}, 0>").execute()),
-    },
-    namespace={
-        "Key": Key,
-        "Text": Text,
-    },
-)
+grammarCfg = {
+    "(mouse | left) click": Mouse("left"),
+    "(mouse | left) hold": Mouse("left:down"),
+    "(mouse | left) release": Mouse("left:up"),
+    "right hold": Mouse("left:down"),
+    "right release": Mouse("left:up"),
+    "double click": Mouse("left:2"),
+    "right click": Mouse("right"),
+    "mouse up": Function(lambda **kw: Mouse(f"<0, {kw['n'] * -5}>").execute()),
+    "mouse right": Function(lambda **kw: Mouse(f"<{kw['n'] * 5}, 0>").execute()),
+    "mouse down": Function(lambda **kw: Mouse(f"<0, {kw['n'] * 5}>").execute()),
+    "mouse left": Function(lambda **kw: Mouse(f"<{kw['n'] * -5}, 0>").execute()),
+}
 
 
 class MouseRule(MappingRule):
     exported = False
-    mapping = grammarCfg.cmd.map
+    mapping = grammarCfg
     extras = [
         rules.num,
     ]

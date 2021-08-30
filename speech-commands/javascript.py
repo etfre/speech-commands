@@ -25,7 +25,7 @@ mapping = {
     "while loop":"while () {{}}{left}{enter}{up}{end}{left:3}",
     "for loop":"for (const x of ) {{}}{left}{enter}{up}{end}{left:3}",
     "for range":"for (let i = 0; i < ; i++) {{}}{left}{enter}{up}{end}{left:8}",
-    "else if statement": "else if () {{}}{left}{enter}{up}{end}{left:3}",
+    "else if [statement]": "else if () {{}}{left}{enter}{up}{end}{left:3}",
     "else statement": "else {{}}{left}{enter}",
     "switch statement":"switch () {{}}{left}{enter}{up}{end}{left:3}",
     "case statement": "case :{left}",

@@ -1,3 +1,6 @@
-import os
-import asyncio
-isinstance(super(isinstance(*args, **kwargs=asyncio)))
+def is_odd(n):
+    if n % 2 == 0:
+        return False
+    elif n % 2 == 0:
+        return True
+print('')

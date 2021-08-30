@@ -116,7 +116,7 @@ mapping = {
     "while loop": "while :{left}",
     "else statement": "else:{enter}",
     "if else": "if :\npass\nelse:\npass{up:3}{left}",
-    "else if statement": "elif :{left}",
+    "else if [statement]": "elif :{left}",
     "try except": "try:{c-enter}pass{c-enter}except:{c-enter}pass{up:2}{c-d}",
     "pass": "pass",
     "true": "True",
@@ -129,7 +129,7 @@ mapping = {
     "new method": "def (self):{left:7}",
     "new class": "class :{enter}def __init__(self):{enter}pass{up:2}{end}{left}",
     "name <functions>": "%(functions)s",
-    "under <functions>": "__%(functions)s__",
+    "under": "____{left:2}",
     "call <functions>": "%(functions)s(){left}",
     "read file": "with open() as f:{left:7}",
     "write file": "with open(, 'w') as f:{left:12}",
@@ -140,13 +140,13 @@ mapping = {
     "for loop": "for :{left}",
     "for enumerate": "for i,  in enumerate():{left:16}",
     "index": "[]{left}",
-    "string index": '[""]{left:2}',
     "string": "''{left}",
     "double string": '""{left}',
     "f string": "f''{left}",
     "double f string": 'f""{left}',
     "args": '*args',
     "kwargs": '**kwargs',
+    "initializer": "def __init__(self):{left:2}",
 }
 extras = [Choice("functions", functions), Choice("errors", errors), Choice('modules', modules)]
 utils.load_commands(contexts.python, commands=mapping, extras=extras)
