@@ -14,6 +14,7 @@ logging.basicConfig(level=logging.INFO)
 engine = srabuilder.setup_engine(expected_error_rate_threshold=0.01, lexicon_path="..\\user_lexicon.txt")
 
 import contexts
+import mouse
 import global_
 import python
 import firefox

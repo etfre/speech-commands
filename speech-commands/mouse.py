@@ -21,9 +21,31 @@ try:
 except:
     pass
 
-from srabuilder import rules
+from srabuilder.actions import scroll
 
-grammarCfg = {
+scroll_directions = {
+    'up': (0, -1),
+    'main': (1, -1),
+    'right': (1, 0),
+    'floor': (1, 1),
+    'down': (0, 1),
+    'air': (-1, 1),
+    'left': (-1, 0),
+    'wash': (-1, -1),
+}
+
+def scroll_function(direction, multiplier=1):
+    direction = [x * multiplier for x in direction]
+    scroll.scroll(direction)
+
+from srabuilder import rules
+from srabuilder.actions import scroll
+import utils
+
+commands = {
+    "scroll <scroll_directions>": Function(lambda **kw: scroll_function(kw['scroll_directions'])),
+    "fast <scroll_directions>": Function(lambda **kw: scroll_function(kw['scroll_directions'], multiplier=3)),
+    "stop": Function(lambda **kw: scroll.stop()),
     "(mouse | left) click": Mouse("left"),
     "(mouse | left) hold": Mouse("left:down"),
     "(mouse | left) release": Mouse("left:up"),
@@ -31,23 +53,11 @@ grammarCfg = {
     "right release": Mouse("left:up"),
     "double click": Mouse("left:2"),
     "right click": Mouse("right"),
-    "mouse up": Function(lambda **kw: Mouse(f"<0, {kw['n'] * -5}>").execute()),
-    "mouse right": Function(lambda **kw: Mouse(f"<{kw['n'] * 5}, 0>").execute()),
-    "mouse down": Function(lambda **kw: Mouse(f"<0, {kw['n'] * 5}>").execute()),
-    "mouse left": Function(lambda **kw: Mouse(f"<{kw['n'] * -5}, 0>").execute()),
+    "[<n>] mouse up": Function(lambda **kw: Mouse(f"<0, {kw['n'] * -5}>").execute()),
+    "[<n>] mouse right": Function(lambda **kw: Mouse(f"<{kw['n'] * 5}, 0>").execute()),
+    "[<n>] mouse down": Function(lambda **kw: Mouse(f"<0, {kw['n'] * 5}>").execute()),
+    "[<n>] mouse left": Function(lambda **kw: Mouse(f"<{kw['n'] * -5}, 0>").execute()),
 }
 
-
-class MouseRule(MappingRule):
-    exported = False
-    mapping = grammarCfg
-    extras = [
-        rules.num,
-    ]
-    defaults = {
-        "n": 1,
-    }
-
-
-def root_rule():
-    return MouseRule(name="mouse")
+extras = [Choice('scroll_directions', scroll_directions)]
+utils.load_commands(None, commands=commands, extras=extras)

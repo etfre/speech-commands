@@ -1,7 +1,6 @@
 from dragonfly import *
 
 import contexts
-import mouse
 import windows
 import utils
 from srabuilder import rules
@@ -21,7 +20,7 @@ repeat = {
 def rule_builder():
     builder = rules.RuleBuilder()
     # builder.repeat.append(keyboard.root_rule())
-    builder.repeat.append(mouse.root_rule())
+    # builder.repeat.append(mouse.root_rule())
     # builder.basic.append(
     #     MappingRule(mapping=basic_mapping, exported=False, name="state_basic")
     # )

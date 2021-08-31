@@ -49,8 +49,8 @@ positive_num = df.Alternative([df.Modifier(positive_digits, parse_numrep), df.Ch
 positive_index = df.RuleWrap("positive_index", df.Modifier(positive_num, lambda x: x - 1))
 positive_index2 = df.RuleWrap("positive_index2", df.Modifier(positive_num, lambda x: x - 1))
 
-def load_commands(context=None, commands=None, repeat_commands=None, extras=(), defaults=None):
-    from breathe import Breathe, CommandContext 
+def load_commands(context=None, commands=None, repeat_commands=None, extras=(), defaults=None, ccr=True):
+    from breathe import Breathe 
     if defaults is None:
         defaults = {}
     defaults.update({'n': 1, 'positive_index': 0})
@@ -59,11 +59,11 @@ def load_commands(context=None, commands=None, repeat_commands=None, extras=(), 
     extras = tuple(extras) + (positive_num, positive_index)
     if commands:
         commands = {k: srabuilder.actions.parse(v) if isinstance(v, str) else v for k, v in commands.items()}
-        Breathe.add_commands(context, commands, ccr=True, defaults=defaults, extras=extras)
+        Breathe.add_commands(context, commands, ccr=ccr, defaults=defaults, extras=extras)
     if repeat_commands:
         formatted_repeat_commands = {}
         for rule, action in repeat_commands.items():
             rule = f'[<n>] {rule}'
             action = srabuilder.actions.parse(action) if isinstance(action, str) else action
             formatted_repeat_commands[rule] = action * df.Repeat(extra='n')
-        Breathe.add_commands(context, formatted_repeat_commands, ccr=True, defaults=defaults, extras=extras)
+        Breathe.add_commands(context, formatted_repeat_commands, ccr=ccr, defaults=defaults, extras=extras)
