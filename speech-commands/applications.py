@@ -1,4 +1,7 @@
 applications = {
+    "q z dev": {
+        "title": "qzdev",
+    },
     "firefox": {
         "title": "mozilla firefox",
         "executable": "C:\\Program Files\\Mozilla Firefox\\firefox.exe",

@@ -21,6 +21,7 @@ import firefox
 import chrome
 import javascript
 import vscode
+import qzdev
 import visual_studio
 import bash
 import node_terminal
