@@ -1,13 +1,14 @@
 from dragonfly import AppContext, FuncContext
 import applications
+import utils
 
 PYTHON = "python"
 JAVASCRIPT = "javascript"
 
 VISUAL_STUDIO_CODE = "VISUAL_STUDIO_CODE"
 
-language = None
-manual_app_context = None
+language = utils.env.get('language')
+manual_app_context = utils.env.get('app')
 
 def title_and_manual_context(spoken: str):
     app = applications.applications[spoken]

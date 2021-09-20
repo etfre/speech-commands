@@ -67,3 +67,18 @@ def load_commands(context=None, commands=None, repeat_commands=None, extras=(), 
             action = srabuilder.actions.parse(action) if isinstance(action, str) else action
             formatted_repeat_commands[rule] = action * df.Repeat(extra='n')
         Breathe.add_commands(context, formatted_repeat_commands, ccr=ccr, defaults=defaults, extras=extras)
+
+def read_env_file(path: str) -> dict:
+    variables = {}
+    with open(path) as f:
+        for line in f:
+            if not line.startswith('#'):
+                key, val = line.replace('\n', '').split('=')
+                variables[key] = val
+    return variables
+
+try:
+    env = read_env_file('..\\.env')
+except FileNotFoundError:
+    env = {}
+print(env)
