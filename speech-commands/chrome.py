@@ -18,6 +18,7 @@ non_repeat_mapping = {
         ).execute()
     ),
     "navigate": Key("c-l"),
+    "new tab": Key("c-t"),
 }
 
 repeat_mapping = {

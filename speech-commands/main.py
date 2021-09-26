@@ -11,7 +11,7 @@ from srabuilder import sleep, environment
 import srabuilder
 
 logging.basicConfig(level=logging.INFO)
-engine = srabuilder.setup_engine(expected_error_rate_threshold=0.01, lexicon_path="..\\user_lexicon.txt")
+engine = srabuilder.setup_engine(silence_timeout=0, expected_error_rate_threshold=0.01, lexicon_path="..\\user_lexicon.txt")
 
 import contexts
 import mouse

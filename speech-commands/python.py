@@ -130,7 +130,7 @@ mapping = {
     "new method": "def (self):{left:7}",
     "new class": "class :{enter}def __init__(self):{enter}pass{up:2}{end}{left}",
     "name <functions>": "%(functions)s",
-    "under": "____{left:2}",
+    "double under": "____{left:2}",
     "call <functions>": "%(functions)s(){left}",
     "read file": "with open() as f:{left:7}",
     "write file": "with open(, 'w') as f:{left:12}",

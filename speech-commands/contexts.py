@@ -27,13 +27,14 @@ def set_language(lang):
 vscode = title_and_manual_context("code")
 qzdev = title_and_manual_context("q z dev")
 visual_studio = AppContext(title="Visual Studio") & ~vscode
+text_editor = vscode | qzdev | visual_studio
 firefox = title_and_manual_context("firefox")
 chrome = title_and_manual_context("chrome")
 # windows_terminal = title_and_manual_context("evan@")
 # git_bash = title_and_manual_context("mingw64")
 # bash = windows_terminal | git_bash
 bash = title_and_manual_context("terminal")
-javascript = vscode & (AppContext(title=".js") | AppContext(title=".ts") | FuncContext(lambda *a: language == JAVASCRIPT))
+javascript = text_editor & (AppContext(title=".js") | AppContext(title=".ts") | FuncContext(lambda *a: language == JAVASCRIPT))
 react = javascript & (AppContext(title=".jsx") | AppContext(title=".tsx")) 
-python = vscode & (AppContext(title=".py") | FuncContext(lambda *a: language == PYTHON))
-css = vscode & AppContext(title=".css")
+python = text_editor & (AppContext(title=".py") | FuncContext(lambda *a: language == PYTHON))
+css = text_editor & AppContext(title=".css")

@@ -89,7 +89,7 @@ letterMap = {
     "air": "a",
     "bat": "b",
     "cap": "c",
-    "drum": "d",
+    "drink": "d",
     "each": "e",
     "fine": "f",
     "gust": "g",
@@ -184,6 +184,9 @@ grammarCfg = {
     "number <digits>": Text("%(digits)s"),
     "<operators>": " %(operators)s ",
     "short <operators>": "%(operators)s",
+    # "a": "a",
+    # "b": "b",
+    # "f": "f",
 }
 
 extras = [

@@ -1,1 +1,1 @@
-VENV\scripts\activate && cd speech-commands && code .. && TYPE "python main.py"
+VENV\scripts\activate && cd speech-commands && code ..
