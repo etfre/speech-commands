@@ -184,9 +184,6 @@ grammarCfg = {
     "number <digits>": Text("%(digits)s"),
     "<operators>": " %(operators)s ",
     "short <operators>": "%(operators)s",
-    # "a": "a",
-    # "b": "b",
-    # "f": "f",
 }
 
 extras = [
