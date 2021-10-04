@@ -35,6 +35,11 @@ scroll_directions = {
     'wash': (-1, -1),
 }
 
+def mouse_move(direction, n):
+    multiplier = 5
+    x, y = direction[0] * n, direction[1] * n
+    Mouse(f'<{x}, {y}>').execute()
+
 def scroll_function(direction, multiplier=1, drag=False):
     direction = [x * multiplier for x in direction]
     if drag:
@@ -56,10 +61,7 @@ commands = {
     "right release": Mouse("right:up"),
     "double click": Mouse("left:2"),
     "right click": Mouse("right"),
-    "[<n>] mouse up": Function(lambda **kw: Mouse(f"<0, {kw['n'] * -5}>").execute()),
-    "[<n>] mouse right": Function(lambda **kw: Mouse(f"<{kw['n'] * 5}, 0>").execute()),
-    "[<n>] mouse down": Function(lambda **kw: Mouse(f"<0, {kw['n'] * 5}>").execute()),
-    "[<n>] mouse left": Function(lambda **kw: Mouse(f"<{kw['n'] * -5}, 0>").execute()),
+    "[<n>] mouse <scroll_directions>": Function(lambda **kw: mouse_move(kw['scroll_directions'], kw['n'])),
 }
 
 extras = [Choice('scroll_directions', scroll_directions), utils.positive_digit]
