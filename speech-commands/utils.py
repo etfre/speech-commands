@@ -45,6 +45,7 @@ positive_digits = df.Sequence(
     [df.Choice(None, nonZeroDigitMap), df.Repetition(df.Choice(None, digitMap), min=0, max=2)],
     name="positive_digits",
 )
+positive_digit = df.Choice('positive_digit', nonZeroDigitMap)
 positive_num = df.Alternative([df.Modifier(positive_digits, parse_numrep), df.Choice(None, ten_through_twelve)], name="n")
 positive_index = df.RuleWrap("positive_index", df.Modifier(positive_num, lambda x: x - 1))
 positive_index2 = df.RuleWrap("positive_index2", df.Modifier(positive_num, lambda x: x - 1))
@@ -53,7 +54,7 @@ def load_commands(context=None, commands=None, repeat_commands=None, extras=(), 
     from breathe import Breathe 
     if defaults is None:
         defaults = {}
-    defaults.update({'n': 1, 'positive_index': 0})
+    defaults.update({'n': 1, 'positive_index': 0, 'positive_digit': 1})
     if extras is None:
         extras = ()
     extras = tuple(extras) + (positive_num, positive_index)
