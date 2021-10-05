@@ -16,6 +16,8 @@ functions = {
     "get element by id": "getElementById",
     "sort": "sort",
     "has own property": "hasOwnProperty",
+    "use state": "useState",
+    "use effect": "useEffect",
 }
 
 mapping = {
@@ -62,14 +64,19 @@ mapping = {
     "double string": '""{left}',
     "template string": '``{left}',
     "export": "export ",
+    "default": "default ",
     "interface": "interface ",
     "constructor": "constructor",
     "type": "type ",
     "key of": "keyof ",
     "annotate": ": ",
-    "type number": "number",
-    "type string": "string",
+    "name number": "number",
+    "name string": "string",
     "implements": "implements ",
+    "extends": "extends ",
+    "generic": "<>{left}",
+    "import statement": 'import  from "";{left:9}',
+    "import": 'import ',
 }
 
 extras = [Choice("functions", functions)]

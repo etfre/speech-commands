@@ -1,32 +1,10 @@
-class f {
-     &&  || !
-    constructor() {
+import React from 'react';
 
-    }
+function Test() {
 
-    a() {
+    const [age, setAge] = React.useState(42);
 
-    }
-
-    t() {
-
-    }
-
+    return <h1>Hello</h1>
 }
 
-
-class CriticalRace {
-    constructor() {
-
-    }   
-}
-
-class HelloWorld implements b {
-    constructor() {
-
-    }
-
-    sum(a: number, b: number) {
-        return a + b;
-    }
-}
+export default Test;
