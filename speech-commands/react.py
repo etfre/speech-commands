@@ -73,6 +73,7 @@ non_repeat_mapping = {
     "on click": 'onClick={{}}{left}',
     "use effect": "useEffect(() => {{}});{left:3}{enter}",
     "react": "React",
+    "new (function | functional) component": utils.snippet('functional-component.tsx') + Key('c-f') + Text('App') + Key('c-d:2') + Key('escape')
 }
 
 repeat_mapping = {

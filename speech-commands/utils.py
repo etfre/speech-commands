@@ -1,4 +1,6 @@
 import dragonfly as df
+import time
+import os.path
 import srabuilder
 import srabuilder.actions
 from srabuilder import rules
@@ -83,3 +85,26 @@ try:
 except FileNotFoundError:
     env = {}
 print(env)
+
+def type_text(lines):
+    for i, line in enumerate(lines):
+        if line:
+            df.Text(line).execute()
+        if i != len(lines) - 1:
+            df.Key('escape').execute()
+            df.Key('enter').execute()
+            df.Key('home').execute()
+
+def type_clipboard():
+    instance = df.Clipboard()        # Create empty instance.
+    instance.copy_from_system()   # Retrieve from system clipboard.
+    if not instance.text:
+        return
+    lines = instance.text.split(os.linesep)
+    type_text(lines)
+
+def snippet(fname: str):
+    def inner():
+        with open(os.path.join('snippets', fname)) as f:
+            type_text([x.replace('\n', '').replace('\r', '') for x in f])
+    return df.Function(inner)

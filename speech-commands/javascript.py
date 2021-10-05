@@ -15,6 +15,8 @@ functions = {
     "fetch": "fetch",
     "get element by id": "getElementById",
     "sort": "sort",
+    "map": "map",
+    "filter": "filter",
     "has own property": "hasOwnProperty",
     "use state": "useState",
 }
