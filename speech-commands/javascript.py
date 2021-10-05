@@ -17,7 +17,6 @@ functions = {
     "sort": "sort",
     "has own property": "hasOwnProperty",
     "use state": "useState",
-    "use effect": "useEffect",
 }
 
 mapping = {
@@ -77,6 +76,7 @@ mapping = {
     "generic": "<>{left}",
     "import statement": 'import  from "";{left:9}',
     "import": 'import ',
+    "document": 'document',
 }
 
 extras = [Choice("functions", functions)]

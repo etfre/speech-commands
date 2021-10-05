@@ -71,6 +71,8 @@ non_repeat_mapping = {
     "import react": "import React from 'react';",
     "class name": 'className=',
     "on click": 'onClick={{}}{left}',
+    "use effect": "useEffect(() => {{}});{left:3}{enter}",
+    "react": "React",
 }
 
 repeat_mapping = {
