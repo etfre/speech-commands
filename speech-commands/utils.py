@@ -76,15 +76,18 @@ def read_env_file(path: str) -> dict:
     with open(path) as f:
         for line in f:
             if not line.startswith('#'):
-                key, val = line.replace('\n', '').split('=')
-                variables[key] = val
+                try:
+                    key, val = line.replace('\n', '').split('=')
+                except ValueError:
+                    pass
+                else:
+                    variables[key] = val
     return variables
 
 try:
     env = read_env_file('..\\.env')
 except FileNotFoundError:
     env = {}
-print(env)
 
 def type_text(lines):
     for i, line in enumerate(lines):
