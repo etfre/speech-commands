@@ -1,6 +1,8 @@
 from dragonfly import *
 import srabuilder.actions
 from srabuilder import rules
+import utils
+import contexts
 
 sites = {
     "hacker news": "news.ycombinator.com",
@@ -38,31 +40,7 @@ repeat_mapping = {
 }
 
 
-def rule_builder():
-    builder = rules.RuleBuilder()
-    extras = [Choice("sites", sites)]
-    builder.basic.append(
-        rules.ParsedRule(
-            mapping=non_repeat_mapping,
-            extras=extras,
-            name="firefox_non_repeat",
-        )
-    )
-    builder.repeat.append(
-        MappingRule(
-            mapping=repeat_mapping, extras=extras, exported=False, name="firefox_repeat"
-        )
-    )
-    return builder
-
-
-# class PythonRule(MappingRule):
-#     mapping = {
-#         "import ":  Text(' import '),
-#     }
-#     extras = [ ]
-#     export=True
-#     context=AppContext(title='visual studio')
-
-# grammar.add_rule(PythonRule())
-# grammar.load()
+extras = [Choice("sites", sites)]
+utils.load_commands(context=contexts.firefox,
+    repeat_commands=repeat_mapping, commands=non_repeat_mapping, extras=extras
+)

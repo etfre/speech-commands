@@ -133,7 +133,6 @@ repeat_mapping = {
     "next editor": "{c-k}{c-right}",
     "move editor right": "{c-k}{left}",
     "move editor left": "{c-k}{right}",
-    "jump": Text(", "),
 }
 
 utils.load_commands(

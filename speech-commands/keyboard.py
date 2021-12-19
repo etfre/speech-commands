@@ -34,15 +34,17 @@ specialCharMap = {
     "(Vertical)": "|",
     "(dash)": "-",
     "period": ".",
-    "comma": ",",
+    "slash": "/",
     "backslash": "\\",
+    "plus": "+",
     "downscore": "_",
     "asterisk": "*",
     "colon": ":",
+    "comma": ",",
     "(semicolon|semi colon)": ";",
     "at sign": "@",
-    "[double] quote": '"',
-    "single quote": "'",
+    "double": '"',
+    "single": "'",
     "number sign": "#",
     "dollar": "$",
     "percent": "%",
@@ -52,18 +54,18 @@ specialCharMap = {
     "space": " ",
     "exclamation": "!",
     "question": "?",
+    "squiggle": "~",
+    "backtick": "`",
     "caret": "^",
-    "north": "up",
-    "south": "down",
-    "west": "left",
-    "east": "right",
-    "page up": "pgup",
-    "page down": "pgdown",
-    "(home key|first)": "home",
-    "(end key|final)": "end",
-    "space": "space",
-    "enter": "enter",
-    "tab key": "tab",
+    "tab key": "\t",
+    "open brace": "{",
+    "open bracket": "[",
+    "open pen": "(",
+    "open angle": "<",
+    "close brace": "}",
+    "close bracket": "]",
+    "close pen": ")",
+    "close angle": ">",
 }
 
 # Modifiers for the press-command.
@@ -113,6 +115,34 @@ letterMap = {
     "zulu ": "z",
 }
 
+keys = {
+    "north": "up",
+    "south": "down",
+    "west": "left",
+    "east": "right",
+    "page up": "pgup",
+    "page down": "pgdown",
+    "(home key|first)": "home",
+    "(end key|final)": "end",
+    "enter": "enter",
+    "escape": "escape",
+    "delete": "del",
+    "snipe": "backspace",
+}
+
+digits = {
+    "zero": "0",
+    "one": "1",
+    "two": "2",
+    "three": "3",
+    "four": "4",
+    "five": "5",
+    "six": "6",
+    "seven": "7",
+    "eight": "8",
+    "nine": "9",
+}
+
 all_chars = {**letterMap, **specialCharMap}
 
 operators = {
@@ -126,11 +156,11 @@ operators = {
     "less than": "<",
 }
 
-# generate uppercase versions of every letter
-upperLetterMap = {}
-for letter in letterMap:
-    upperLetterMap["upper " + letter] = letterMap[letter].upper()
-letterMap.update(upperLetterMap)
+# # generate uppercase versions of every letter
+# upperLetterMap = {}
+# for letter in letterMap:
+#     upperLetterMap["upper " + letter] = letterMap[letter].upper()
+# letterMap.update(upperLetterMap)
 
 
 grammarCfg = {
@@ -147,40 +177,22 @@ grammarCfg = {
     "(hold|press) control": Key("ctrl:down/3"),
     "release control": Key("ctrl:up"),
     "release [all]": release,
-    "single": "{squote}",
-    "double": Key("dquote"),
-    "squiggle": Text("~"),
-    "backtick": Key("backtick"),
-    "colon": Key("colon"),
-    "(semicolon|semi colon)": ";",
-    "comma": Key("comma"),
-    "dash": Key("hyphen"),
-    "downscore": Key("underscore"),
-    "<letters>": Text("%(letters)s"),
-    "<char>": Key("%(char)s"),
-    "<modifierSingle> <all_chars>": "{%(modifierSingle)s:down}{%(all_chars)s}{%(modifierSingle)s:up}",
-    "<modifier1> <modifier2> <all_chars>": Key("%(modifier1)s:down") + Key("%(modifier2)s:down") + Key("%(all_chars)s") + Key("%(modifier2)s:up") + Key("%(modifier1)s:down") ,
-    "open brace": Key("lbrace"),
-    "open bracket": Key("lbracket"),
-    "open pen": "(",
-    "close brace": Key("rbrace"),
-    "close bracket": Key("rbracket"),
-    "close pen": Key("rparen"),
+
+    "upper <letters>": Function(lambda **kw: Text(kw["letters"].upper()).execute()),
+    "<all_chars>": "%(all_chars)s",
+    "<modifierSingle> <all_chars>": "{%(modifierSingle)s:down}%(all_chars)s{%(modifierSingle)s:up}",
+    "<modifier1> <modifier2> <all_chars>": Key("%(modifier1)s:down") + Key("%(modifier2)s:down") + Text("%(all_chars)s") + Key("%(modifier2)s:up") + Key("%(modifier1)s:down") ,
+    "<keys>": "{%(keys)s}",
+    "<modifierSingle> <keys>": "{%(modifierSingle)s:down}{%(keys)s}{%(modifierSingle)s:up}",
+    "<modifier1> <modifier2> <keys>": Key("%(modifier1)s:down") + Key("%(modifier2)s:down") + Key("%(keys)s") + Key("%(modifier2)s:up") + Key("%(modifier1)s:down") ,
     "parentheses": Text("()"),
     "brackets": Text("[]"),
     "braces": Text("{}"),
-    "escape": Key("escape"),
-    "comma": Key("comma"),
-    "home key": Key("home"),
-    "end key": Key("end"),
-    "delete": Key("del"),
-    "snipe ": Key("backspace"),
-    "before": Key("c-left"),
-    "after": Key("c-right"),
+    "jump left": Key("c-left"),
+    "jump right": Key("c-right"),
     "hexadecimal": Text("0x"),
     "undo": Key("c-z"),
     "redo": Key("c-y"),
-    "slash": "{slash}",
     "number <digits>": Text("%(digits)s"),
     "<operators>": " %(operators)s ",
     "short <operators>": "%(operators)s",
@@ -192,7 +204,8 @@ extras = [
     Choice("char", specialCharMap),
     Choice("letters", letterMap),
     Choice("all_chars", all_chars),
-    rules.digits,
+    Choice("keys", keys),
+    Choice('digits', digits),
     Choice("modifier1", singleModifierMap),
     Choice("modifier2", singleModifierMap),
     Choice("modifierSingle", singleModifierMap),

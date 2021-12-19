@@ -21,6 +21,7 @@ import firefox
 import chrome
 import javascript
 import vscode
+import vscode2
 import qzdev
 import visual_studio
 import bash
@@ -73,7 +74,6 @@ def main(args):
 
     map_contexts_to_builder = {
         (): global_.rule_builder(),
-        (contexts.firefox,): firefox.rule_builder(),
         (contexts.chrome,): chrome.rule_builder(),
         (contexts.bash,): bash.rule_builder()
         .merge(python_terminal.rule_builder())
@@ -85,7 +85,7 @@ def main(args):
 
     _dictation.load_grammar()
 
-    # threading.Thread(target=command_line_loop, args=(engine,), daemon=True).start()
+    threading.Thread(target=command_line_loop, args=(engine,), daemon=True).start()
     srabuilder.run_engine()
 
 

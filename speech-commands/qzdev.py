@@ -121,7 +121,6 @@ repeat_mapping = {
     "indent": "{tab}",
     "close tab": "{c-w}",
     "grab": "{c-d}",
-    "jump": Text(", "),
 }
 
 utils.load_commands(
