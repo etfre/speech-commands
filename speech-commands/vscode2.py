@@ -12,8 +12,7 @@ def invoke():
     df.Key('i').execute()
 
 def move_until(char: str, count: int, include_pattern=False, reverse=False, move=False):
-    if char in '.{}()[]':
-        char = '\\' + char
+    char = '\\' + char
     invoke()
     time.sleep(0.1)
     text = char
@@ -41,7 +40,7 @@ cmds = {
     "[<digits>] before <all_chars>": df.Function(lambda **kw: move_until(kw['all_chars'], int(kw['digits']), reverse=True, include_pattern=True, move=True)),
     "[<digits>] select before <all_chars>": df.Function(lambda **kw: move_until(kw['all_chars'], int(kw['digits']), reverse=True, include_pattern=True)),
 }
-
+# * +
 utils.load_commands(
     contexts.vscode,
     commands=cmds,

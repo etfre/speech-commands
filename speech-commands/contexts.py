@@ -4,6 +4,7 @@ import utils
 
 PYTHON = "python"
 JAVASCRIPT = "javascript"
+CPP = "cpp"
 
 VISUAL_STUDIO_CODE = "VISUAL_STUDIO_CODE"
 
@@ -37,4 +38,5 @@ bash = title_and_manual_context("terminal")
 javascript = text_editor & (AppContext(title=".js") | AppContext(title=".ts") | FuncContext(lambda *a: language == JAVASCRIPT))
 react = javascript 
 python = text_editor & (AppContext(title=".py") | FuncContext(lambda *a: language == PYTHON))
+cpp = text_editor & (AppContext(title=".cpp") | FuncContext(lambda *a: language == CPP))
 css = text_editor & AppContext(title=".css")

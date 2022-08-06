@@ -188,6 +188,7 @@ grammarCfg = {
     "parentheses": Text("()"),
     "brackets": Text("[]"),
     "braces": Text("{}"),
+    "(space | spaces) around": Text("  ") + Key("left"),
     "jump left": Key("c-left"),
     "jump right": Key("c-right"),
     "hexadecimal": Text("0x"),

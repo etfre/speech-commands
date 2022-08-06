@@ -85,7 +85,7 @@ def read_env_file(path: str) -> dict:
     return variables
 
 try:
-    env = read_env_file('..\\.env')
+    env = read_env_file(os.path.join('..", ".env'))
 except FileNotFoundError:
     env = {}
 
