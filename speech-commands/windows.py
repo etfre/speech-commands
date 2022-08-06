@@ -1,6 +1,6 @@
 import os
 from dragonfly import *
-from dragonfly.windows.win32_window import Win32Window
+from dragonfly.windows import Window
 from srabuilder import rules
 import contexts
 import applications
@@ -17,7 +17,7 @@ def open_app(**kw):
     titles = title if isinstance(title, (list, tuple)) else [title]
     matches = []
     for t in titles:
-        matches.extend(Win32Window.get_matching_windows(title=t))
+        matches.extend(Window.get_matching_windows(title=t))
     matches[index].set_foreground()
     # FocusWindow(title=app.get("title"), index=index).execute()
 
