@@ -1,5 +1,10 @@
 import os.path
 import os
+# delete so dragonfly doesn't think we're on linux for mac
+try:
+    del os.environ['DISPLAY']
+except KeyError:
+    pass
 import threading
 import time
 import logging
