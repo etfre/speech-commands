@@ -5,6 +5,7 @@ import utils
 PYTHON = "python"
 JAVASCRIPT = "javascript"
 CPP = "cpp"
+OCAML = "ocaml"
 
 VISUAL_STUDIO_CODE = "VISUAL_STUDIO_CODE"
 
@@ -35,8 +36,10 @@ chrome = title_and_manual_context("chrome")
 # git_bash = title_and_manual_context("mingw64")
 # bash = windows_terminal | git_bash
 bash = title_and_manual_context("terminal")
+terminal = title_and_manual_context("efredericks2@")
 javascript = text_editor & (AppContext(title=".js") | AppContext(title=".ts") | FuncContext(lambda *a: language == JAVASCRIPT))
 react = javascript 
 python = text_editor & (AppContext(title=".py") | FuncContext(lambda *a: language == PYTHON))
 cpp = text_editor & (AppContext(title=".cpp") | FuncContext(lambda *a: language == CPP))
+cpp = text_editor & (AppContext(title=".ml") | FuncContext(lambda *a: language == OCAML))
 css = text_editor & AppContext(title=".css")

@@ -113,7 +113,7 @@ non_repeat_mapping = {
 }
 
 repeat_mapping = {
-    "flip north": "{a-up}",
+    "flip north": "{a-up}", 
     "flip south": "{a-down}",
     "duplicate north": "{as-up}",
     "duplicate south": "{as-down}",

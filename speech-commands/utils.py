@@ -111,3 +111,7 @@ def snippet(fname: str):
         with open(os.path.join('snippets', fname)) as f:
             type_text([x.replace('\n', '').replace('\r', '') for x in f])
     return df.Function(inner)
+
+def is_mac():
+    import platform
+    return platform.platform() == 'Darwin'
