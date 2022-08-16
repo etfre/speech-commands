@@ -8,7 +8,7 @@ import uuid
 import os
 import tempfile
 
-import utils
+import utils, contexts
 CLIP_EXE = 'pbcopy' if utils.IS_MAC else 'clip.exe'
 
 def log_dir():
@@ -17,7 +17,7 @@ def log_dir():
         os.mkdir(tdir)
     except FileExistsError:
         pass
-    return tdiry
+    return tdir
 
 
 def linux_path(win_path):
@@ -189,24 +189,25 @@ basic = {
 repeat = {"close tab": Key("cs-w")}
 
 
-def rule_builder():
-    builder = rules.RuleBuilder()
-    extras = [Choice("functions", functions), Choice("values", values), rules.num]
-    defaults = {"n": 1}
-    builder.basic.append(
-        MappingRule(
-            mapping=basic,
-            extras=extras,
-            exported=False,
-            defaults=defaults,
-            name="wsl_basic",
-        )
-    )
-    builder.repeat.append(
-        MappingRule(mapping=repeat, extras=extras, exported=False, name="wsl_repeat")
-    )
-    return builder
+# def rule_builder():
+#     builder = rules.RuleBuilder()
+#     extras = [Choice("functions", functions), Choice("values", values), rules.num]
+#     defaults = {"n": 1}
+#     builder.basic.append(
+#         MappingRule(
+#             mapping=basic,
+#             extras=extras,
+#             exported=False,
+#             defaults=defaults,
+#             name="wsl_basic",
+#         )
+#     )
+#     builder.repeat.append(
+#         MappingRule(mapping=repeat, extras=extras, exported=False, name="wsl_repeat")
+#     )
+#     return builder
 
+utils.load_commands(contexts.terminal, commands=basic, repeat_commands=repeat, extras=[Choice("functions", functions), Choice("values", values), rules.num])
 
 # on_load() => extensions.register('terminal.wsl.py', wsl)
 # is_active() => window.test('MINGW64') || window.test('evan@')

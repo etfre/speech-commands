@@ -75,9 +75,9 @@ def main(args):
     map_contexts_to_builder = {
         (): global_.rule_builder(),
         (contexts.chrome,): chrome.rule_builder(),
-        (contexts.bash,): bash.rule_builder()
-        .merge(python_terminal.rule_builder())
-        .merge(windows_terminal.rule_builder()),
+        # (contexts.bash,): bash.rule_builder()
+        # .merge(python_terminal.rule_builder())
+        # .merge(windows_terminal.rule_builder()),
         (contexts.visual_studio,): visual_studio.rule_builder(),
     }
     srabuilder.load_environment_grammars(map_contexts_to_builder)
