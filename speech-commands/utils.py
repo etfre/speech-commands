@@ -6,7 +6,7 @@ import srabuilder.actions
 from srabuilder import rules
 import platform
 
-IS_MAC = platform.platform() == 'Darwin'
+IS_MAC = platform.system() == 'Darwin'
 
 digitMap = {
     "zero": 0,
