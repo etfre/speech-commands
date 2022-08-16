@@ -158,6 +158,7 @@ basic = {
     "pseudo": Text("sudo "),
     "move": Text("mv "),
     "touch": Text("touch "),
+    "tail": Text("tail "),
     "make deer": Text("mkdir "),
     "remove": Text("rm "),
     "source": Text("source "),
@@ -187,61 +188,3 @@ basic = {
 }
 
 repeat = {"close tab": Key("cs-w")}
-
-
-# def rule_builder():
-#     builder = rules.RuleBuilder()
-#     extras = [Choice("functions", functions), Choice("values", values), rules.num]
-#     defaults = {"n": 1}
-#     builder.basic.append(
-#         MappingRule(
-#             mapping=basic,
-#             extras=extras,
-#             exported=False,
-#             defaults=defaults,
-#             name="wsl_basic",
-#         )
-#     )
-#     builder.repeat.append(
-#         MappingRule(mapping=repeat, extras=extras, exported=False, name="wsl_repeat")
-#     )
-#     return builder
-
-utils.load_commands(contexts.terminal, commands=basic, repeat_commands=repeat, extras=[Choice("functions", functions), Choice("values", values), rules.num])
-
-# on_load() => extensions.register('terminal.wsl.py', wsl)
-# is_active() => window.test('MINGW64') || window.test('evan@')
-
-# paths := home='~' | (oh see h)='~/lp/och' | downloads='/c/users/fredere1/downloads' | projects='~/lp'
-
-# unzip = 'unzip '
-# list files = 'ls | cat -n' {enter}
-# list all = 'ls -a' {enter}
-# climb [<number>] = 'cd ..' + '/..' * (int($1 || 1) - 1) {enter}
-# drop <number> = wsl.drop($1)
-# new tab = {'ctrl shift 3'}
-# close tab = {'ctrl shift w'}
-# tab right = {'ctrl tab'}
-# tab left = {'ctrl shift tab'}
-# google <number> = wsl.search(lines=int($1))
-# run with logging = wsl.run_and_log('')
-# go to <paths> = 'cd ' $1 {enter}
-# path <paths> = $1
-# new pane right = {'alt shift +'}
-# new pane down = {'alt shift -'}
-# focus (right | left | up | down) = {'alt ' $1}
-# copy output = wsl.to_clipboard()
-# copy <number> = wsl.list_files_to_clipboard($1)
-# copy location = 'pwd' wsl.to_clipboard()
-# launch code = 'code .' {enter}
-# source <number> = wsl.navigate_list('ls', 'source', $1)
-# python <number> = wsl.navigate_list('ls', 'python', $1)
-# execute <number> = wsl.navigate_list('ls', '', $1)
-
-# pseudo = 'sudo '
-# move = 'mv '
-# touch = 'touch '
-# make deer = 'mkdir '
-# remove = 'rm '
-# cd = 'cd '
-# r m minus r f = 'rm -rf '
