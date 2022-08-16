@@ -43,14 +43,9 @@ import css
 
 
 class Observer(RecognitionObserver):
-    def on_begin(self):
-        print("Speech started.")
 
     def on_recognition(self, words):
         print("Recognized:", " ".join(words))
-
-    def on_failure(self):
-        print("Sorry, what was that?")
 
 
 def command_line_loop(engine):

@@ -194,7 +194,7 @@ grammarCfg = {
     "hexadecimal": Text("0x"),
     "undo": Key("c-z"),
     "redo": Key("c-y"),
-    "number <digits>": Text("%(digits)s"),
+    "number <num>": Text("%(num)s"),
     "<operators>": " %(operators)s ",
     "short <operators>": "%(operators)s",
 }
@@ -216,6 +216,7 @@ extras = [
     Choice("modifier2", singleModifierMap),
     Choice("modifierSingle", singleModifierMap),
     Choice("operators", operators),
+    utils.num,
 ]
 
 utils.load_commands(None, repeat_commands=grammarCfg, extras=extras)

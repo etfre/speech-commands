@@ -11,7 +11,7 @@ IS_MAC = platform.system() == 'Darwin'
 digitMap = {
     "zero": 0,
     "one": 1,
-    "too": 2,
+    "two": 2,
     "three": 3,
     "four": 4,
     "five": 5,
@@ -23,7 +23,7 @@ digitMap = {
 
 nonZeroDigitMap = {
     "one": 1,
-    "too": 2,
+    "two": 2,
     "three": 3,
     "four": 4,
     "five": 5,
@@ -44,6 +44,9 @@ def parse_numrep(rep):
     numstr = str(first) + "".join(str(d) for d in rest)
     return int(numstr)
 
+def parse_numrep2(rep):
+    return int("".join(str(d) for d in rep))
+
 
 positive_digits = df.Sequence(
     [df.Choice(None, nonZeroDigitMap), df.Repetition(df.Choice(None, digitMap), min=0, max=2)],
@@ -53,6 +56,8 @@ positive_digit = df.Choice('positive_digit', nonZeroDigitMap)
 positive_num = df.Alternative([df.Modifier(positive_digits, parse_numrep), df.Choice(None, ten_through_twelve)], name="n")
 positive_index = df.RuleWrap("positive_index", df.Modifier(positive_num, lambda x: x - 1))
 positive_index2 = df.RuleWrap("positive_index2", df.Modifier(positive_num, lambda x: x - 1))
+numrep = df.RuleWrap("num",df.Repetition(df.Choice(None, digitMap), min=0, max=10))
+num = df.Modifier(numrep, parse_numrep2)
 
 def load_commands(context=None, commands=None, repeat_commands=None, extras=(), defaults=None, ccr=True):
     from breathe import Breathe 
