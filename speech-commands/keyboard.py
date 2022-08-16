@@ -199,6 +199,11 @@ grammarCfg = {
     "short <operators>": "%(operators)s",
 }
 
+if utils.IS_MAC:
+    grammarCfg['undo'] = Key("w-z")
+    grammarCfg['redo'] = Key("ws-z")
+
+
 extras = [
     Dictation("text"),
     Dictation("text2"),

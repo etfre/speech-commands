@@ -112,6 +112,9 @@ non_repeat_mapping = {
     **git_commands
 }
 
+if utils.IS_MAC:
+    non_repeat_mapping['fuzzy'] = "{w-p}"
+
 repeat_mapping = {
     "flip north": "{a-up}", 
     "flip south": "{a-down}",
