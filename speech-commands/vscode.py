@@ -113,7 +113,14 @@ non_repeat_mapping = {
 }
 
 if utils.IS_MAC:
+    non_repeat_mapping['file explorer'] = "{ws-e}"
+    non_repeat_mapping['comment'] = "{w-slash}"
     non_repeat_mapping['fuzzy'] = "{w-p}"
+    non_repeat_mapping['new tab'] = "{w-n}"
+    non_repeat_mapping['(search file) | (file search)'] = "{w-f}"
+    non_repeat_mapping["(search project) | (project search)"] = "{ws-f}",
+    non_repeat_mapping["(replace [in] file) | (file replace)"] = "{wa-f}",
+    non_repeat_mapping["(replace [in] project) | (project replace)"] = "{sw-h}",
 
 repeat_mapping = {
     "flip north": "{a-up}", 
