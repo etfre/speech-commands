@@ -165,7 +165,7 @@ operators = {
 
 grammarCfg = {
     # Navigation keys.
-    "application key": release + Key("apps/3"),
+    "application key": release + z Key("apps/3"),
     "win key": release + Key("win/3"),
     "copy that": release + Key("c-c"),
     "cut that": release + Key("c-x"),

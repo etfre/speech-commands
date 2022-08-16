@@ -28,7 +28,6 @@ import chrome
 import javascript
 import vscode
 import vscode2
-import qzdev
 import visual_studio
 import bash
 import node_terminal

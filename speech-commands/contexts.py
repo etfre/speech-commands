@@ -27,9 +27,8 @@ def set_language(lang):
     language = lang
 
 vscode = title_and_manual_context("code")
-qzdev = title_and_manual_context("q z dev")
 visual_studio = AppContext(title="Visual Studio") & ~vscode
-text_editor = vscode | qzdev | visual_studio
+text_editor = vscode | visual_studio
 firefox = title_and_manual_context("firefox")
 chrome = title_and_manual_context("chrome")
 # windows_terminal = title_and_manual_context("evan@")
