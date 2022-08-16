@@ -145,6 +145,18 @@ repeat_mapping = {
     "move editor left": "{c-k}{right}",
 }
 
+if utils.IS_MAC:
+    repeat_mapping['tab left'] = '{wa-left}'
+    repeat_mapping['tab right'] = '{wa-right}'
+    repeat_mapping['new line'] = '{w-enter}'
+    repeat_mapping['new line above'] = '{ws-enter}'
+    repeat_mapping['indent'] = '{w-]}'
+    repeat_mapping['out dent'] = '{w-[}'
+    repeat_mapping['close tab'] = '{w-w}'
+    repeat_mapping['grab'] = '{w-d}'
+        
+        
+
 utils.load_commands(
     contexts.vscode,
     commands=non_repeat_mapping,
