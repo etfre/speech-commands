@@ -6,14 +6,17 @@ from breathe import Breathe
 from srabuilder.actions import surround, between
 from srabuilder import rules
 
+IS_MAC = utils.IS_MAC
+CMD_OR_CTRL = 'w' if IS_MAC else 'c'
+
 clip = {
     "cut": "cut",
     "copy": "copy",
     "select": "(select)",
 }
 clip_action = {
-    "cut": Key("c-x"),
-    "copy": Key("c-c") + Key("escape"),
+    "cut": Key(f"{CMD_OR_CTRL}-x"),
+    "copy": Key(f"{CMD_OR_CTRL}-c") + Key("escape"),
 }
 
 movements = {
@@ -28,12 +31,12 @@ movements_multiple = {
 }
 
 select_actions_single = {
-    "all": Key("c-a"),
+    "all": Key(f"{CMD_OR_CTRL}-a"),
 }
 
 select_actions_multiple = {
-    "line": Key("c-l"),
-    "word": Key("c-d"),
+    "line": Key(f"{CMD_OR_CTRL}-l"),
+    "word": Key(f"{CMD_OR_CTRL}-d"),
 }
 
 
@@ -91,7 +94,7 @@ non_repeat_mapping = {
     "comment": "{c-slash}",
     "block comment": "{as-a}",
     "fuzzy": "{c-p}",
-    "save file": "{c-s}",
+    "save file": f"{{{CMD_OR_CTRL}-s}}",
     "open recent": "{c-r}",
     "shark": "{c-enter}{c-[}",
     "(search file) | (file search)": "{c-f}",
@@ -121,6 +124,8 @@ if utils.IS_MAC:
     non_repeat_mapping["(search project) | (project search)"] = "{ws-f}"
     non_repeat_mapping["(replace [in] file) | (file replace)"] = "{wa-f}"
     non_repeat_mapping["(replace [in] project) | (project replace)"] = "{sw-h}"
+    non_repeat_mapping["file explorer"] = "{ws-e}"
+    non_repeat_mapping["source control"] = "{ws-g}g"
 
 repeat_mapping = {
     "flip north": "{a-up}", 
