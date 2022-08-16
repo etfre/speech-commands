@@ -35,7 +35,7 @@ chrome = title_and_manual_context("chrome")
 # git_bash = title_and_manual_context("mingw64")
 # bash = windows_terminal | git_bash
 bash = title_and_manual_context("terminal")
-terminal = title_and_manual_context("efredericks2@")
+terminal = title_and_manual_context("terminal")
 javascript = text_editor & (AppContext(title=".js") | AppContext(title=".ts") | FuncContext(lambda *a: language == JAVASCRIPT))
 react = javascript 
 python = text_editor & (AppContext(title=".py") | FuncContext(lambda *a: language == PYTHON))
