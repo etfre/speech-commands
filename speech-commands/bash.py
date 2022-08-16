@@ -8,6 +8,8 @@ import uuid
 import os
 import tempfile
 
+import utils
+CLIP_EXE = 'pbcopy' if utils.IS_MAC else 'clip.exe'
 
 def log_dir():
     tdir = os.path.join(tempfile.gettempdir(), "osspeak_std")
@@ -47,7 +49,7 @@ def navigate_list(gather_cmd, num):
         tmp_clip = str(uuid.uuid4())
         clipboard.set(tmp_clip)
         assert clipboard.get() == tmp_clip
-        Text(f"{gather_cmd} | clip.exe").execute()
+        Text(f"{gather_cmd} | {CLIP_EXE}").execute()
         Key("enter").execute()
         num = int(num)
         clip_text = clipboard.get()
@@ -89,7 +91,7 @@ def drop(num):
 
 
 def to_clipboard():
-    enter_command("| clip.exe")
+    enter_command("| {CLIP_EXE}")
 
 
 def run_and_log(s):
@@ -168,7 +170,7 @@ basic = {
     "list all": Text("ls -a") + Key("enter"),
     "<n> drop": wrap_n(drop),
     "<n> copy": wrap_n(list_files_to_clipboard),
-    "to clipboard": Text("| clip.exe") + Key("enter"),
+    "to clipboard": Text(f"| {CLIP_EXE}") + Key("enter"),
     "[<n>] climb": (Text("cd ..") + Text("/..") * Repeat(extra="n", count=-1))
     + Key("enter"),
     "git": Text("git "),
