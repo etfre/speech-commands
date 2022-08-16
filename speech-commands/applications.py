@@ -15,7 +15,7 @@ applications = {
         "title": "google chrome",
         "executable": "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe",
     },
-    "terminal": {"title": "efrederick2@", "executable": "wt.exe"},
+    "terminal": {"title": "efredericks2@", "executable": "wt.exe"},
     "command prompt": {"title": ["command prompt", "cmd.exe"], "executable": "cmd.exe"},
     "powershell": {"title": "windows powershell"},
     "git bash": {
