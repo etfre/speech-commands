@@ -1,5 +1,4 @@
 from dragonfly import *
-from srabuilder import rules
 import utils
 import contexts
 
@@ -148,6 +147,8 @@ mapping = {
     "args": '*args',
     "kwargs": '**kwargs',
     "initializer": "def __init__(self):{left:2}",
+    "annotate": ": ",
+    "self": "self",
 }
 extras = [Choice("functions", functions), Choice("errors", errors), Choice('modules', modules)]
 utils.load_commands(contexts.python, commands=mapping, extras=extras)

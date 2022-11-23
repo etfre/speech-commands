@@ -9,7 +9,9 @@ import os
 import tempfile
 
 import utils, contexts
-CLIP_EXE = 'pbcopy' if utils.IS_MAC else 'clip.exe'
+
+CLIP_EXE = "pbcopy" if utils.IS_MAC else "clip.exe"
+
 
 def log_dir():
     tdir = os.path.join(tempfile.gettempdir(), "osspeak_std")
@@ -154,37 +156,52 @@ def wrap_n(fn):
 
 
 basic = {
-    "unzip": Text("unzip "),
-    "pseudo": Text("sudo "),
-    "move": Text("mv "),
-    "touch": Text("touch "),
-    "tail": Text("tail "),
-    "make deer": Text("mkdir "),
-    "remove": Text("rm "),
-    "source": Text("source "),
-    "a p t get": Text("apt-get "),
-    "install": Text("install "),
-    "update": Text("update "),
-    "echo": Text("echo "),
-    "cd": Text("cd "),
-    "list files": Text("ls | cat -n") + Key("enter"),
-    "list all": Text("ls -a") + Key("enter"),
+    "(p w d) | present working directory": "pwd{enter}",
+    "unzip": "unzip ",
+    "pseudo": "sudo ",
+    "move": "mv ",
+    "touch": "touch ",
+    "tail": "tail ",
+    "make deer": "mkdir ",
+    "echo": "echo ",
+    "remove": "rm ",
+    "source": "source ",
+    "a p t get": "apt-get ",
+    "install": "install ",
+    "update": "update ",
+    "echo": "echo ",
+    "cd": "cd ",
+    "cat": "cat ",
+    "list files": "ls | cat -n{enter}",
+    "list all [files]": "ls -a{enter}",
     "<n> drop": wrap_n(drop),
     "<n> copy": wrap_n(list_files_to_clipboard),
-    "to clipboard": Text(f"| {CLIP_EXE}") + Key("enter"),
+    "to clipboard": f"| {CLIP_EXE} {{enter}}",
     "[<n>] climb": (Text("cd ..") + Text("/..") * Repeat(extra="n", count=-1))
     + Key("enter"),
-    "git": Text("git "),
-    "git commit": srabuilder.actions.type_and_move('git commit -m ""', left=1),
-    "git push": Text("git push "),
-    "git add": Text("git add "),
-    "git stash": Text("git stash "),
-    "git stash pop": Text("git stash pop "),
-    "git checkout": Text("git checkout "),
-    "git checkout new branch": Text("git checkout -b "),
-    "git checkout master": Text("git checkout master") + Key("enter"),
-    "git merge": Text("git merge "),
+    "git": "git ",
+    "git commit": 'git commit -m ""{left}',
+    "git push": "git push ",
+    "git add": "git add ",
+    "git stash": "git stash ",
+    "git stash pop": "git stash pop ",
+    "git checkout": "git checkout ",
+    "git checkout new branch": "git checkout -b ",
+    "git checkout master": "git checkout master{enter}",
+    "git checkout main": "git checkout main{enter}",
+    "git merge": "git merge ",
+    "up stream": "upstream",
+    "origin": "origin",
+    "docker": "docker ",
+    "compose": "compose ",
+    "docker ((p s) | processes)": "docker ps ",
+    "docker all ((p s) | processes)": "docker ps -a",
+    "docker compose up": "docker compose up ",
+    "docker compose down": "docker compose down {enter}",
+    "docker compose run": "docker compose run",
     "git checkout <n>": wrap_n(checkout_numbered_branch),
 }
 
 repeat = {"close tab": Key("cs-w")}
+
+utils.load_commands(contexts.bash, commands=basic, repeat_commands=repeat)

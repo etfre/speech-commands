@@ -112,6 +112,7 @@ non_repeat_mapping = {
     "go to line": "{c-g}",
     "split editor": "{c-backslash}",
     "close editor": "{c-f4}",
+    "format document": "{sa-f}",    
     **git_commands
 }
 

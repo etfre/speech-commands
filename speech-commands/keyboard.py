@@ -36,7 +36,7 @@ specialCharMap = {
     "period": ".",
     "slash": "/",
     "backslash": "\\",
-    "plus": "+",
+    "addition": "+",
     "downscore": "_",
     "asterisk": "*",
     "colon": ":",
@@ -192,8 +192,6 @@ grammarCfg = {
     "jump left": Key("c-left"),
     "jump right": Key("c-right"),
     "hexadecimal": Text("0x"),
-    "undo": Key("c-z"),
-    "redo": Key("c-y"),
     "number <num>": Text("%(num)s"),
     "<operators>": " %(operators)s ",
     "short <operators>": "%(operators)s",
@@ -202,6 +200,9 @@ grammarCfg = {
 if utils.IS_MAC:
     grammarCfg['undo'] = Key("w-z")
     grammarCfg['redo'] = Key("ws-z")
+else:
+    grammarCfg['undo'] = Key("c-z")
+    grammarCfg['redo'] = Key("c-y")
 
 
 extras = [

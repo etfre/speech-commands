@@ -1,35 +1,37 @@
 from dragonfly import *
+from typing import List
 
 
 dictation_lengths = []
 
 
-def snake_case(words):
+def snake_case(words: List[str]):
     parsed = "_".join(words)
     return parsed
 
 
-def capital_snake_case(words):
+def capital_snake_case(words: List[str]):
     return snake_case(words).upper()
 
 
-def camel_case(words):
+def camel_case(words: List[str]):
     return words[0] + "".join([x.title() for x in words[1:]])
 
 
-def one_word(words):
+def one_word(words: List[str]):
     return "".join(words)
 
-def hyphen_case(words):
+
+def hyphen_case(words: List[str]):
     parsed = "-".join(words)
     return parsed
 
 
-def capital_hyphen_case(words):
+def capital_hyphen_case(words: List[str]):
     return hyphen_case(words).upper()
 
 
-def title_case(words):
+def title_case(words: List[str]):
     return "".join([x.title() for x in words])
 
 
