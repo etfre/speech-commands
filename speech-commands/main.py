@@ -33,6 +33,8 @@ import bash
 import node_terminal
 import python_terminal
 import windows_terminal
+import vscode_javascript
+import vscode_python
 import keyboard
 import react
 import css

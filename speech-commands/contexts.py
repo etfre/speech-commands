@@ -15,7 +15,7 @@ manual_app_context = utils.env.get("app")
 
 def title_and_manual_context(spoken: str):
     app = applications.applications[spoken]
-    title = app["title"]
+    title = app["title"]     
     return AppContext(title=title) | FuncContext(lambda *a: manual_app_context == title)
 
 

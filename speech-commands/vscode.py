@@ -4,10 +4,11 @@ import contexts
 from dragonfly import *
 from breathe import Breathe
 from srabuilder.actions import surround, between
-from srabuilder import rules
+from srabuilder import rules, clipboard
 
 IS_MAC = utils.IS_MAC
 CMD_OR_CTRL = 'w' if IS_MAC else 'c'
+
 
 clip = {
     "cut": "cut",

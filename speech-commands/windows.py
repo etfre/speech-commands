@@ -19,6 +19,7 @@ def open_app(**kw):
     for t in titles:
         matches.extend(Window.get_matching_windows(title=t))
     matches[index].set_foreground()
+    
 
 
 def start_app(**kw):
