@@ -63,12 +63,8 @@ positive_num = df.Alternative(
     [df.Modifier(positive_digits, parse_numrep), df.Choice(None, ten_through_twelve)],
     name="n",
 )
-positive_index = df.RuleWrap(
-    "positive_index", df.Modifier(positive_num, lambda x: x - 1)
-)
-positive_index2 = df.RuleWrap(
-    "positive_index2", df.Modifier(positive_num, lambda x: x - 1)
-)
+positive_index = df.RuleWrap("positive_index", df.Modifier(positive_num, lambda x: x - 1))
+positive_index2 = df.RuleWrap("positive_index2", df.Modifier(positive_num, lambda x: x - 1))
 numrep = df.RuleWrap("num", df.Repetition(df.Choice(None, digitMap), min=0, max=10))
 num = df.Modifier(numrep, parse_numrep2)
 
@@ -90,20 +86,13 @@ def load_commands(
         extras = ()
     extras = tuple(extras) + (positive_num, positive_index)
     if commands:
-        commands = {
-            k: srabuilder.actions.parse(v) if isinstance(v, str) else v
-            for k, v in commands.items()
-        }
-        Breathe.add_commands(
-            context, commands, ccr=ccr, defaults=defaults, extras=extras
-        )
+        commands = {k: srabuilder.actions.parse(v) if isinstance(v, str) else v for k, v in commands.items()}
+        Breathe.add_commands(context, commands, ccr=ccr, defaults=defaults, extras=extras)
     if repeat_commands:
         formatted_repeat_commands = {}
         for rule, action in repeat_commands.items():
             rule = f"[<n>] {rule}"
-            action = (
-                srabuilder.actions.parse(action) if isinstance(action, str) else action
-            )
+            action = srabuilder.actions.parse(action) if isinstance(action, str) else action
             formatted_repeat_commands[rule] = action * df.Repeat(extra="n")
         Breathe.add_commands(
             context,

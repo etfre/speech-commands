@@ -7,7 +7,7 @@ from srabuilder.actions import surround, between
 from srabuilder import rules, clipboard
 
 IS_MAC = utils.IS_MAC
-CMD_OR_CTRL = 'w' if IS_MAC else 'c'
+CMD_OR_CTRL = "w" if IS_MAC else "c"
 
 
 clip = {
@@ -62,6 +62,7 @@ def do_select(**kw):
         time.sleep(0.2)
         clip_action[clip].execute()
 
+
 git_commands = {
     "git push": "{f1}git push",
     "git stash": "{f1}git stash",
@@ -108,21 +109,23 @@ non_repeat_mapping = {
     "surround double": surround('"', '"'),
     "call that": "(){left}",
     "new tab": "{c-n}",
-    "go to line <n>": between(Key("c-g"), Function(lambda **k: Text(str(k["n"])).execute()), Key('enter')),
-    "below line <n>": between(Key("c-g"), Function(lambda **k: Text(str(k["n"])).execute()), Key('enter'), Key('c-enter')),
+    "go to line <n>": between(Key("c-g"), Function(lambda **k: Text(str(k["n"])).execute()), Key("enter")),
+    "below line <n>": between(
+        Key("c-g"), Function(lambda **k: Text(str(k["n"])).execute()), Key("enter"), Key("c-enter")
+    ),
     "go to line": "{c-g}",
     "split editor": "{c-backslash}",
     "close editor": "{c-f4}",
-    "format document": "{sa-f}",    
-    **git_commands
+    "format document": "{sa-f}",
+    **git_commands,
 }
 
 if utils.IS_MAC:
-    non_repeat_mapping['file explorer'] = "{ws-e}"
-    non_repeat_mapping['comment'] = "{w-slash}"
-    non_repeat_mapping['fuzzy'] = "{w-p}"
-    non_repeat_mapping['new tab'] = "{w-n}"
-    non_repeat_mapping['(search file) | (file search)'] = "{w-f}"
+    non_repeat_mapping["file explorer"] = "{ws-e}"
+    non_repeat_mapping["comment"] = "{w-slash}"
+    non_repeat_mapping["fuzzy"] = "{w-p}"
+    non_repeat_mapping["new tab"] = "{w-n}"
+    non_repeat_mapping["(search file) | (file search)"] = "{w-f}"
     non_repeat_mapping["(search project) | (project search)"] = "{ws-f}"
     non_repeat_mapping["(replace [in] file) | (file replace)"] = "{wa-f}"
     non_repeat_mapping["(replace [in] project) | (project replace)"] = "{sw-h}"
@@ -130,7 +133,7 @@ if utils.IS_MAC:
     non_repeat_mapping["source control"] = "{cs-g}"
 
 repeat_mapping = {
-    "flip north": "{a-up}", 
+    "flip north": "{a-up}",
     "flip south": "{a-down}",
     "duplicate north": "{as-up}",
     "duplicate south": "{as-down}",
@@ -153,16 +156,15 @@ repeat_mapping = {
 }
 
 if utils.IS_MAC:
-    repeat_mapping['tab left'] = '{wa-left}'
-    repeat_mapping['tab right'] = '{wa-right}'
-    repeat_mapping['new line'] = '{w-enter}'
-    repeat_mapping['new line above'] = '{ws-enter}'
-    repeat_mapping['indent'] = '{w-]}'
-    repeat_mapping['out dent'] = '{w-[}'
-    repeat_mapping['close tab'] = '{w-w}'
-    repeat_mapping['grab'] = '{w-d}'
-        
-        
+    repeat_mapping["tab left"] = "{wa-left}"
+    repeat_mapping["tab right"] = "{wa-right}"
+    repeat_mapping["new line"] = "{w-enter}"
+    repeat_mapping["new line above"] = "{ws-enter}"
+    repeat_mapping["indent"] = "{w-]}"
+    repeat_mapping["out dent"] = "{w-[}"
+    repeat_mapping["close tab"] = "{w-w}"
+    repeat_mapping["grab"] = "{w-d}"
+
 
 utils.load_commands(
     contexts.vscode,
@@ -173,6 +175,6 @@ utils.load_commands(
         Choice("select_actions_multiple", select_actions_multiple),
         Choice("movements", movements),
         Choice("select_actions_single", select_actions_single),
-    ]
+    ],
 )
 utils.load_commands(contexts.vscode, repeat_commands=repeat_mapping)
