@@ -12,10 +12,10 @@ node_map = {
     "list": "list",
     "if statement": "if_statement",
     "if clause": "if_statement.*[:4]", 
-    "if condition": "if_statement.*[1]", 
+    "if condition": "if_statement.*[1]",
     "else if [clause | clauses]": "if_statement.elif_clause",
     "else [clause | clauses]": "if_statement.else_clause",
-    "test": "dictionary[].pair[-1]"
+    "arguments": "argument_list"
 }
 
 snippets = {
@@ -28,7 +28,9 @@ snippets = {
 }
 
 commands = {
-    "select <node>": Function(lambda **kw: vscode2.select_node(kw['node'], "up"))
+    "select <node>": Function(lambda **kw: vscode2.select_node(kw['node'], "up")),
+    "select previous <node>": Function(lambda **kw: vscode2.select_node(kw['node'], "before")),
+    "select next <node>": Function(lambda **kw: vscode2.select_node(kw['node'], "after")),
 }
 
 extras = [
