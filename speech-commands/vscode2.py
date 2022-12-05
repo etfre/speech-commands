@@ -14,6 +14,7 @@ import dragonfly as df
 from breathe import Breathe
 from srabuilder.actions import surround, between
 from srabuilder import rules
+from typing import List
 
 RPC_INPUT_FILE = os.path.join(tempfile.gettempdir(), "speech-commands-input.json")
 RPC_OUTPUT_FILE = os.path.join(tempfile.gettempdir(), "speech-commands-output.json")
@@ -44,8 +45,9 @@ def watch_output_file():
 
 threading.Thread(target=watch_output_file, daemon=True).start()
 
-def select_node(node_type: str, direction: str):
-    params = {"pattern": node_type, "type": node_type, "direction": direction, "count": 1}
+def select_node(patternOrPatterns: str | List[str], direction: str):
+    patterns = [patternOrPatterns] if isinstance(patternOrPatterns, str) else patternOrPatterns
+    params = {"patterns": patterns, "type": patternOrPatterns, "direction": direction, "count": 1}
     send_request("SELECT_NODE", params)
 
 def format_request(method: str, params=None) -> dict:

@@ -6,7 +6,16 @@ import vscode_utils
 import vscode2
 
 node_map = {
-    "function definition": "function_definition"
+    "function definition": ["decorated_definition", "function_definition"],
+    "every (item | pair)": "dictionary.pair[]",
+    "block": "block",
+    "list": "list",
+    "if statement": "if_statement",
+    "if clause": "if_statement.*[:4]", 
+    "if condition": "if_statement.*[1]", 
+    "else if [clause | clauses]": "if_statement.elif_clause",
+    "else [clause | clauses]": "if_statement.else_clause",
+    "test": "dictionary[].pair[-1]"
 }
 
 snippets = {
@@ -19,13 +28,6 @@ snippets = {
 }
 
 commands = {
-    "<clip> <snippets>": Function(
-        lambda **kw: vscode_utils.expand_while(
-            first_check=kw["snippets"][0],
-            last_check=kw["snippets"][1],
-            on_done=kw["clip"],
-        )
-    ),
     "select <node>": Function(lambda **kw: vscode2.select_node(kw['node'], "up"))
 }
 
