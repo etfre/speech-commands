@@ -5,63 +5,10 @@ from dragonfly import *
 from breathe import Breathe
 from srabuilder.actions import surround, between
 from srabuilder import rules, clipboard
+import vscode_utils
 
 IS_MAC = utils.IS_MAC
 CMD_OR_CTRL = "w" if IS_MAC else "c"
-
-
-clip = {
-    "cut": "cut",
-    "copy": "copy",
-    "select": "(select)",
-}
-clip_action = {
-    "cut": Key(f"{CMD_OR_CTRL}-x"),
-    "copy": Key(f"{CMD_OR_CTRL}-c") + Key("escape"),
-}
-
-movements = {
-    "final": "end",
-    "first": "home",
-}
-movements_multiple = {
-    "north": "up",
-    "east": "right",
-    "south": "down",
-    "west": "left",
-}
-
-select_actions_single = {
-    "all": Key(f"{CMD_OR_CTRL}-a"),
-}
-
-select_actions_multiple = {
-    "line": Key(f"{CMD_OR_CTRL}-l"),
-    "word": Key(f"{CMD_OR_CTRL}-d"),
-}
-
-
-def clip_move(**kw):
-    clip = kw["clip"]
-    move = kw.get("movements_multiple") or kw.get("movements")
-    move_key = Key(move) * Repeat(count=kw["n"])
-    Key("shift:down").execute()
-    move_key.execute()
-    Key("shift:up").execute()
-    if clip in clip_action:
-        time.sleep(0.2)
-        clip_action[clip].execute()
-
-
-def do_select(**kw):
-    move = kw.get("select_actions_multiple") or kw.get("select_actions_single")
-    move_key = move * Repeat(count=kw["n"])
-    move_key.execute()
-    clip = kw["clip"]
-    if clip in clip_action:
-        time.sleep(0.2)
-        clip_action[clip].execute()
-
 
 git_commands = {
     "git push": "{f1}git push",
@@ -80,14 +27,14 @@ git_commands = {
 }
 
 non_repeat_mapping = {
-    "<clip> <movements>": Function(clip_move),
-    "[<n>] <clip> <movements_multiple>": Function(clip_move),
-    "[<n>] <clip> <select_actions_multiple>": Function(do_select),
+    "<clip> <movements>": Function(vscode_utils.clip_move),
+    "[<n>] <clip> <movements_multiple>": Function(vscode_utils.clip_move),
+    "[<n>] <clip> <select_actions_multiple>": Function(vscode_utils.do_select),
     "select content": "{home}{s-end}",
     "copy content": "{home}{s-end}{c-c}{escape}",
     "cut content": "{home}{s-end}{c-v}",
     "delete content": "{home}{s-end}{backspace}",
-    "<clip> <select_actions_single>": Function(do_select),
+    "<clip> <select_actions_single>": Function(vscode_utils.do_select),
     "file explorer": "{cs-e}",
     "source control": "{cs-g}g",
     "command palette": "{f1}",
@@ -170,11 +117,11 @@ utils.load_commands(
     contexts.vscode,
     commands=non_repeat_mapping,
     extras=[
-        Choice("clip", clip),
-        Choice("movements_multiple", movements_multiple),
-        Choice("select_actions_multiple", select_actions_multiple),
-        Choice("movements", movements),
-        Choice("select_actions_single", select_actions_single),
+        Choice("clip", vscode_utils .clip),
+        Choice("movements_multiple", vscode_utils.movements_multiple),
+        Choice("select_actions_multiple", vscode_utils.select_actions_multiple),
+        Choice("movements", vscode_utils.movements),
+        Choice("select_actions_single", vscode_utils.select_actions_single),
     ],
 )
 utils.load_commands(contexts.vscode, repeat_commands=repeat_mapping)

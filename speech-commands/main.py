@@ -35,7 +35,6 @@ import python_terminal
 import windows_terminal
 import vscode_javascript
 import vscode_python
-import keyboard
 import react
 import css
 
@@ -52,7 +51,7 @@ class Observer(RecognitionObserver):
 
 def command_line_loop(engine):
     while True:
-        user_input = input("> ")
+        user_input = input("> ").strip()
         if user_input:
             time.sleep(4)
             try:
