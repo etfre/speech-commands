@@ -28,26 +28,6 @@ node_map = {
     "call": "call",
     "attribute": "attribute",
     "name": "identifier",
-}# dictionary.pair+
+}
 
-# snippets = {
-#     "function": (("def ", "async def ", "lambda "), re.compile("[^:]$")),
-#     "method": (("def ", "async def "), re.compile("[^:]$")),
-#     "class": ("class ", re.compile("[^:]$")),
-#     "list": ("[", re.compile("[\\]]$")),
-#     "dictionary": ("{", re.compile("[\\}]$")),
-#     "call": (re.compile(r'.*\('), re.compile("[\\)],*$")),
-# }
-
-# commands = {
-#     "select <node>": Function(lambda **kw: vscode2.select_node(kw['node'], "up")),
-#     "select previous <node>": Function(lambda **kw: vscode2.select_node(kw['node'], "before")),
-#     "select next <node>": Function(lambda **kw: vscode2.select_node(kw['node'], "after")),
-# }
-
-# extras = [
-#     Choice("clip", vscode_utils.clip),
-#     Choice("node", node_map),
-#     Choice("snippets", snippets),
-# ]
 vscode2.load_language_commands(contexts.python & contexts.vscode, node_map)
