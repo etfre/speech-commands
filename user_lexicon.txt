@@ -4,6 +4,7 @@ cmd s i E m d
 const k A n s t
 downscore d aU n s k o U r
 hexadecimal h E k s V d E s V m V l
+param p 3 '{ m
 powershell p aU 3 S E l
 uncomment V n k A m E n t
 unstage V n s t e I dZ
