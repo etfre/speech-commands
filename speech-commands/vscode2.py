@@ -52,14 +52,14 @@ def watch_output_file():
 threading.Thread(target=watch_output_file, daemon=True).start()
 
 
-def select_node(patternOrPatterns: str | List[str], direction: str, on_done: str):
+def select_node(patternOrPatterns: str | List[str], direction: str, select_type: str, on_done: str):
     patterns = [patternOrPatterns] if isinstance(patternOrPatterns, str) else patternOrPatterns
     params = {
         "patterns": patterns,
         "type": patternOrPatterns,
         "direction": direction,
         "count": 1,
-        # "selectType": select_type,
+        "selectType": select_type,
         "onDone": on_done,
     }
     send_request("SELECT_NODE", params)
@@ -171,7 +171,7 @@ directions = {
 def select_with_index_or_slice(node, direction: str, index_or_slice: str, on_done: str):
     print(node, index_or_slice)
     pattern = node.format(index_or_slice)
-    select_node(pattern, direction, on_done)
+    select_node(pattern, direction, "each", on_done)
 
 
 def create_format_map(nodes: Dict[str, List[str] | str]) -> Dict[str, List[str] | str]:
@@ -211,8 +211,8 @@ def load_language_commands(context: df.Context, nodes: Dict[str, List[str] | str
     print(format_nodes)
     print(removed_fields_map)
     commands = {
-        "<clip> <node>": df.Function(lambda **kw: select_node(kw["node"], "up", kw["clip"])),
-        "<clip> <direction> <node>": df.Function(lambda **kw: select_node(kw["node"], kw["direction"], kw["clip"])),
+        "<clip> <node>": df.Function(lambda **kw: select_node(kw["node"], "up", "block", kw["clip"])),
+        "<clip> <direction> <node>": df.Function(lambda **kw: select_node(kw["node"], kw["direction"], "block", kw["clip"])),
         "<clip> every <format_node>": df.Function(
             lambda **kw: select_with_index_or_slice(kw["format_node"], "up", "[]", kw["clip"])
         ),
