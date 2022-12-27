@@ -63,7 +63,7 @@ def expand_while(first_check=None, last_check=None, on_done=None):
 clip = {
     "cut": Key(f"{CMD_OR_CTRL}-x"),
     "copy": Key(f"{CMD_OR_CTRL}-c") + Key("escape"),
-    "select": None,
+    "take": None,
 }
 clip_action = {
     "cut": Key(f"{CMD_OR_CTRL}-x"),

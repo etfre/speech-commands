@@ -30,7 +30,7 @@ non_repeat_mapping = {
     "<clip> <movements>": Function(vscode_utils.clip_move),
     "[<n>] <clip> <movements_multiple>": Function(vscode_utils.clip_move),
     "[<n>] <clip> <select_actions_multiple>": Function(vscode_utils.do_select),
-    "select content": "{home}{s-end}",
+    "take content": "{home}{s-end}",
     "copy content": "{home}{s-end}{c-c}{escape}",
     "cut content": "{home}{s-end}{c-v}",
     "delete content": "{home}{s-end}{backspace}",

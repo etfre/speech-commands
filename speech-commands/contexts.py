@@ -15,7 +15,7 @@ manual_app_context = utils.env.get("app")
 
 def title_and_manual_context(spoken: str):
     app = applications.applications[spoken]
-    title = app["title"]     
+    title = app["title"]
     return AppContext(title=title) | FuncContext(lambda *a: manual_app_context == title)
 
 
@@ -41,16 +41,10 @@ bash = wsl_terminal
 # bash = title_and_manual_context("terminal")
 terminal = title_and_manual_context("terminal")
 javascript = text_editor & (
-    AppContext(title=".js")
-    | AppContext(title=".ts")
-    | FuncContext(lambda *a: language == JAVASCRIPT)
+    AppContext(title=".js") | AppContext(title=".ts") | FuncContext(lambda *a: language == JAVASCRIPT)
 )
 react = javascript
-python = text_editor & (
-    AppContext(title=".py") | FuncContext(lambda *a: language == PYTHON)
-)
+python = text_editor & (AppContext(title=".py") | FuncContext(lambda *a: language == PYTHON))
 cpp = text_editor & (AppContext(title=".cpp") | FuncContext(lambda *a: language == CPP))
-cpp = text_editor & (
-    AppContext(title=".ml") | FuncContext(lambda *a: language == OCAML)
-)
+ocaml = text_editor & (AppContext(title=".ml") | FuncContext(lambda *a: language == OCAML))
 css = text_editor & AppContext(title=".css")
