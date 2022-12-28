@@ -58,14 +58,14 @@ specialCharMap = {
     "backtick": "`",
     "caret": "^",
     "tab key": "\t",
-    "open brace": "{",
-    "open bracket": "[",
-    "open pen": "(",
-    "open angle": "<",
-    "close brace": "}",
-    "close bracket": "]",
-    "close pen": ")",
-    "close angle": ">",
+    "left brace": "{",
+    "left square": "[",
+    "left paren": "(",
+    "left angle": "<",
+    "right brace": "}",
+    "right square": "]",
+    "right paren": ")",
+    "right angle": ">",
 }
 
 # Modifiers for the press-command.

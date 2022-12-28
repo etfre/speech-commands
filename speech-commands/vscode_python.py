@@ -7,7 +7,8 @@ import vscode2
 from typing import List, Dict
 
 node_map = {
-    "function definition": "decorated_definition?.function_definition",
+    "func deaf": "decorated_definition?.function_definition",
+    "func name": "decorated_definition?.function_definition.*[1]",
     "(item | pair)": "dictionary.pair",
     "block": "block",
     "list": "list",

@@ -56,7 +56,6 @@ non_repeat_mapping = {
     "surround double": surround('"', '"'),
     "call that": "(){left}",
     "new tab": "{c-n}",
-    "go to line <n>": between(Key("c-g"), Function(lambda **k: Text(str(k["n"])).execute()), Key("enter")),
     "below line <n>": between(
         Key("c-g"), Function(lambda **k: Text(str(k["n"])).execute()), Key("enter"), Key("c-enter")
     ),

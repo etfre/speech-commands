@@ -16,19 +16,11 @@ import vscode_utils
 from breathe import Breathe
 from srabuilder.actions import surround, between
 from srabuilder import rules
-from typing import List, Dict
+from typing import List, Dict, Any
 
 RPC_INPUT_FILE = os.path.join(tempfile.gettempdir(), "speech-commands-input.json")
 RPC_OUTPUT_FILE = os.path.join(tempfile.gettempdir(), "speech-commands-output.json")
-RPC_RESPONSES = queue.Queue(maxsize=1)
-
-
-def drain_queue(q):
-    while True:
-        try:
-            RPC_RESPONSES.get_nowait()
-        except queue.Empty:
-            break
+RESPONSES_DICT: Dict[str, Any] = {}
 
 
 def watch_output_file():
@@ -43,10 +35,9 @@ def watch_output_file():
                 except json.decoder.JSONDecodeError:
                     pass
                 else:
-                    drain_queue(RPC_RESPONSES)
-                    RPC_RESPONSES.put_nowait(resp)
+                    RESPONSES_DICT[resp["id"]] = (resp, stamp)
             prev_stamp = stamp
-        time.sleep(0.1)
+        time.sleep(0.01)
 
 
 threading.Thread(target=watch_output_file, daemon=True).start()
@@ -73,21 +64,30 @@ def format_request(method: str, params=None) -> dict:
     return request
 
 
-def send_request(method: str, params=None, wait_for_response=False):
+def send_request(method: str, params=None):
     request = format_request(method, params)
+    request_id = request['id']
     with open(RPC_INPUT_FILE, "w") as f:
         json.dump(request, f)
-    if wait_for_response:
-        resp = RPC_RESPONSES.get(block=True, timeout=3)
-        return resp
+    return get_response(request_id)
 
-
-def send_requests(requests, wait_for_response=False):
-    with open(RPC_INPUT_FILE, "w") as f:
-        json.dump(requests, f)
-    if wait_for_response:
-        responses = RPC_RESPONSES.get(block=True, timeout=3)
-        return responses
+def get_response(request_id: str):
+    val = RESPONSES_DICT.get(request_id)
+    start_time = time.time()
+    while True:
+        curr_time = time.time()
+        val = RESPONSES_DICT.get(request_id)
+        if val is not None:
+            break
+        if curr_time - start_time > 5:
+            raise TimeoutError
+        time.sleep(0.01)
+    try:
+        del RESPONSES_DICT[request_id]
+    except KeyError:
+        pass
+    resp, _ = val
+    return resp
 
 
 def move_until(char: str, count: int, include_pattern=False, reverse=False, move=False):
@@ -99,7 +99,8 @@ def move_until(char: str, count: int, include_pattern=False, reverse=False, move
         "reverse": reverse,
         "isMove": move,
     }
-    send_request("SELECT_UNTIL_PATTERN", params=params)
+    resp = send_request("SELECT_UNTIL_PATTERN", params=params)
+    print(resp)
 
 
 def select_balanced(left: str, right: str, count: int, include_pattern=False, reverse=False, move=False):
@@ -113,21 +114,27 @@ def select_balanced(left: str, right: str, count: int, include_pattern=False, re
     }
     send_request("SELECT_IN_SURROUND", params=params)
 
+def go_to_line(line: int):
+    send_request("GO_TO_LINE", params={"line": line - 1})
+
+def execute_command(command: str, *args):
+    params = {"command": command, "args": args}
+    send_request("EXECUTE_COMMAND", params=params)
 
 cmds = {
-    "[<digits>] select parentheses": df.Function(lambda **kw: select_balanced("(", ")", count=int(kw["digits"]))),
+    "[<digits>] take parentheses": df.Function(lambda **kw: select_balanced("(", ")", count=int(kw["digits"]))),
     "[<digits>] until <all_chars>": df.Function(lambda **kw: move_until(kw["all_chars"], int(kw["digits"]), move=True)),
-    "[<digits>] select until <all_chars>": df.Function(lambda **kw: move_until(kw["all_chars"], int(kw["digits"]))),
+    "[<digits>] take until <all_chars>": df.Function(lambda **kw: move_until(kw["all_chars"], int(kw["digits"]))),
     "[<digits>] after <all_chars>": df.Function(
         lambda **kw: move_until(kw["all_chars"], int(kw["digits"]), include_pattern=True, move=True)
     ),
-    "[<digits>] select after <all_chars>": df.Function(
+    "[<digits>] take after <all_chars>": df.Function(
         lambda **kw: move_until(kw["all_chars"], int(kw["digits"]), include_pattern=True)
     ),
     "[<digits>] retreat <all_chars>": df.Function(
         lambda **kw: move_until(kw["all_chars"], int(kw["digits"]), reverse=True, move=True)
     ),
-    "[<digits>] select retreat <all_chars>": df.Function(
+    "[<digits>] take retreat <all_chars>": df.Function(
         lambda **kw: move_until(kw["all_chars"], int(kw["digits"]), reverse=True)
     ),
     "[<digits>] before <all_chars>": df.Function(
@@ -142,6 +149,8 @@ cmds = {
     "[<digits>] select before <all_chars>": df.Function(
         lambda **kw: move_until(kw["all_chars"], int(kw["digits"]), reverse=True, include_pattern=True)
     ),
+    "go <n>": df.Function(lambda **k: go_to_line(k['n'])),
+
 }
 
 clip_corgi = {
@@ -212,7 +221,9 @@ def load_language_commands(context: df.Context, nodes: Dict[str, List[str] | str
     print(removed_fields_map)
     commands = {
         "<clip> <node>": df.Function(lambda **kw: select_node(kw["node"], "up", "block", kw["clip"])),
-        "<clip> <direction> <node>": df.Function(lambda **kw: select_node(kw["node"], kw["direction"], "block", kw["clip"])),
+        "<clip> <direction> <node>": df.Function(
+            lambda **kw: select_node(kw["node"], kw["direction"], "block", kw["clip"])
+        ),
         "<clip> every <format_node>": df.Function(
             lambda **kw: select_with_index_or_slice(kw["format_node"], "up", "[]", kw["clip"])
         ),
