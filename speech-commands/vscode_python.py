@@ -8,7 +8,10 @@ from typing import List, Dict
 
 node_map = {
     "func deaf": "decorated_definition?.function_definition",
-    "func name": "decorated_definition?.function_definition.*[1]",
+    # "func deaf": "decorated_definition?.function_definition @name(__init__",
+    "func name": "decorated_definition?.function_definition.[1]",
+    "class deaf": "decorated_definition?.class_definition",
+    "class name": "decorated_definition?.class_definition.@[1]",
     "(item | pair)": "dictionary.pair",
     "block": "block",
     "list": "list",
@@ -29,6 +32,10 @@ node_map = {
     "call": "call",
     "attribute": "attribute",
     "name": "identifier",
+    "assignment": "assignment",
+    "expression": "expression",
+    "statement": "(_simple_statement | _compound_statement)",
+    # "statement": "_simple_statement",
 }
 
 vscode2.load_language_commands(contexts.python & contexts.vscode, node_map)
