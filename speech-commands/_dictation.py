@@ -65,8 +65,8 @@ def load_grammar():
             lambda dictation: do_dictation(dictation)
         ),
         "word <dictation>": dictation_wrap(one_word),
-        "snake <dictation>": dictation_wrap(snake_case),
-        "snake capital <dictation>": dictation_wrap(capital_snake_case),
+        "cobra <dictation>": dictation_wrap(snake_case),
+        "cobra capital <dictation>": dictation_wrap(capital_snake_case),
         "hyphen <dictation>": dictation_wrap(hyphen_case),
         "hyphen capital <dictation>": dictation_wrap(capital_hyphen_case),
         "camel <dictation>": dictation_wrap(camel_case),

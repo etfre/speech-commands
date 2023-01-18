@@ -122,6 +122,7 @@ mapping = {
     "true": "True",
     "false": "False",
     "none": "None",
+    "list": "[]{left}",
     "dictionary": "{{}}{left}",
     "slice": "[:]{left:2}",
     "new function": "def ():{left:3}",

@@ -43,11 +43,40 @@ def watch_output_file():
 threading.Thread(target=watch_output_file, daemon=True).start()
 
 
-def select_node(patternOrPatterns: str | List[str], direction: str, select_type: str, on_done: str):
-    patterns = [patternOrPatterns] if isinstance(patternOrPatterns, str) else patternOrPatterns
+def smart_action_text(**kw):
     params = {
-        "patterns": patterns,
-        "type": patternOrPatterns,
+        'target': {
+            "pattern": re.escape(kw['all_chars']), 
+            "count": kw.get('digits', 1)
+        },
+        'direction': 'backwards' if 'back' in kw['_node'].words() else 'forwards'
+    }
+    action = kw['action']
+    if action in ("start", "end"):
+        params['target']['side'] = action
+        action = "move"
+    return smart_action_request(action, params)
+
+def smart_action(**kw):
+    get_every = 'every' in kw['_node'].words()
+    node = kw['node']
+    params = {
+        'target': {"selector": node, 'getEvery': get_every},
+        'direction': kw.get('direction', 'smart')
+    }
+    action = kw['action']
+    if action in ("start", "end"):
+        params['target']['side'] = action
+        action = "move"
+    return smart_action_request(action, params)
+
+def smart_action_request(action: str, params: Dict):
+    assert "action" not in params
+    return send_request("SMART_ACTION", {**params, "action": action})
+
+def select_node(pattern: str | List[str], direction: str, select_type: str, on_done: str):
+    params = {
+        "pattern": pattern,
         "direction": direction,
         "count": 1,
         "selectType": select_type,
@@ -66,10 +95,11 @@ def format_request(method: str, params=None) -> dict:
 
 def send_request(method: str, params=None):
     request = format_request(method, params)
-    request_id = request['id']
+    request_id = request["id"]
     with open(RPC_INPUT_FILE, "w") as f:
         json.dump(request, f)
     return get_response(request_id)
+
 
 def get_response(request_id: str):
     val = RESPONSES_DICT.get(request_id)
@@ -100,7 +130,6 @@ def move_until(char: str, count: int, include_pattern=False, reverse=False, move
         "isMove": move,
     }
     resp = send_request("SELECT_UNTIL_PATTERN", params=params)
-    print(resp)
 
 
 def select_balanced(left: str, right: str, count: int, include_pattern=False, reverse=False, move=False):
@@ -114,46 +143,52 @@ def select_balanced(left: str, right: str, count: int, include_pattern=False, re
     }
     send_request("SELECT_IN_SURROUND", params=params)
 
+
 def go_to_line(line: int):
     send_request("GO_TO_LINE", params={"line": line - 1})
+
 
 def execute_command(command: str, *args):
     params = {"command": command, "args": args}
     send_request("EXECUTE_COMMAND", params=params)
 
+
 cmds = {
     "[<digits>] take parentheses": df.Function(lambda **kw: select_balanced("(", ")", count=int(kw["digits"]))),
-    "[<digits>] until <all_chars>": df.Function(lambda **kw: move_until(kw["all_chars"], int(kw["digits"]), move=True)),
-    "[<digits>] take until <all_chars>": df.Function(lambda **kw: move_until(kw["all_chars"], int(kw["digits"]))),
-    "[<digits>] after <all_chars>": df.Function(
-        lambda **kw: move_until(kw["all_chars"], int(kw["digits"]), include_pattern=True, move=True)
-    ),
-    "[<digits>] take after <all_chars>": df.Function(
-        lambda **kw: move_until(kw["all_chars"], int(kw["digits"]), include_pattern=True)
-    ),
-    "[<digits>] retreat <all_chars>": df.Function(
-        lambda **kw: move_until(kw["all_chars"], int(kw["digits"]), reverse=True, move=True)
-    ),
-    "[<digits>] take retreat <all_chars>": df.Function(
-        lambda **kw: move_until(kw["all_chars"], int(kw["digits"]), reverse=True)
-    ),
-    "[<digits>] before <all_chars>": df.Function(
-        lambda **kw: move_until(
-            kw["all_chars"],
-            int(kw["digits"]),
-            reverse=True,
-            include_pattern=True,
-            move=True,
-        )
-    ),
-    "[<digits>] select before <all_chars>": df.Function(
-        lambda **kw: move_until(kw["all_chars"], int(kw["digits"]), reverse=True, include_pattern=True)
-    ),
-    "go <n>": df.Function(lambda **k: go_to_line(k['n'])),
-
+    "[<digits>] [back] <action> <all_chars>": df.Function(smart_action_text),
+    # "[<digits>] pre <all_chars>": df.Function(lambda **kw: move_until(kw["all_chars"], int(kw["digits"]), move=True)),
+    # "[<digits>] take pre <all_chars>": df.Function(lambda **kw: move_until(kw["all_chars"], int(kw["digits"]))),
+    # "[<digits>] post <all_chars>": df.Function(
+    #     lambda **kw: move_until(kw["all_chars"], int(kw["digits"]), include_pattern=True, move=True)
+    # ),
+    # "[<digits>] take post <all_chars>": df.Function(
+    #     lambda **kw: move_until(kw["all_chars"], int(kw["digits"]), include_pattern=True)
+    # ),
+    # "[<digits>] back post <all_chars>": df.Function(
+    #     lambda **kw: move_until(kw["all_chars"], int(kw["digits"]), reverse=True, move=True)
+    # ),
+    # "[<digits>] take back post <all_chars>": df.Function(
+    #     lambda **kw: move_until(kw["all_chars"], int(kw["digits"]), reverse=True)
+    # ),
+    # "[<digits>] back pre <all_chars>": df.Function(
+    #     lambda **kw: move_until(
+    #         kw["all_chars"],
+    #         int(kw["digits"]),
+    #         reverse=True,
+    #         include_pattern=True,
+    #         move=True,
+    #     )
+    # ),
+    # "[<digits>] take back pre <all_chars>": df.Function(
+    #     lambda **kw: move_until(kw["all_chars"], int(kw["digits"]), reverse=True, include_pattern=True)
+    # ),
+    "go <n>": df.Function(lambda **k: go_to_line(k["n"])),
 }
 
-clip_corgi = {
+actions = {
+    # technically pre and post become move
+    "pre": "start",
+    "post": "end",
     "take": "select",
     "copy": "copy",
     "cut": "cut",
@@ -161,81 +196,67 @@ clip_corgi = {
 }
 
 
-utils.load_commands(
-    contexts.vscode,
-    commands=cmds,
-    extras=[
-        df.Choice("all_chars", {**keyboard.all_chars, **keyboard.digits}),
-        df.Choice("digits", keyboard.digits),
-    ],
-    defaults={"digits": 1},
-)
+
 
 directions = {
-    "previous": "before",
-    "next": "after",
+    "previous": "backwards",
+    "next": "forwards",
 }
 
 
-def select_with_index_or_slice(node, direction: str, index_or_slice: str, on_done: str):
-    print(node, index_or_slice)
-    pattern = node.format(index_or_slice)
-    select_node(pattern, direction, "each", on_done)
+def smart_action_with_index_or_slice(kw, index_or_slice: str):
+    kw['node'] = kw['format_node'].format(index_or_slice)
+    del kw['format_node']
+    return smart_action(**kw)
 
 
-def create_format_map(nodes: Dict[str, List[str] | str]) -> Dict[str, List[str] | str]:
+def create_format_map(nodes: Dict[str, str]) -> Dict[str, str]:
     str_formatter = string.Formatter()
-    format_map: Dict[str, List[str] | str] = {}
-    for utterance, patternOrPatterns in nodes.items():
-        is_str = isinstance(patternOrPatterns, str)
-        patterns = [patternOrPatterns] if is_str else patternOrPatterns
-        format_patterns = []
-        for pattern in patterns:
-            has_format_field = any((tup[1] == "0" for tup in str_formatter.parse(pattern)))
-            pattern_with_format_field = pattern if has_format_field else pattern + "{0}"
-            temp = pattern_with_format_field.replace("{0}", "temp-placeholder")
-            temp = temp.replace("{", "{{").replace("}", "}}")
-            pattern_with_format_field = temp.replace("temp-placeholder", "{0}")
-            format_patterns.append(pattern_with_format_field)
-        format_map[utterance] = format_patterns[0] if is_str else format_patterns
+    format_map: Dict[str, str] = {}
+    for utterance, pattern in nodes.items():
+        has_format_field = any((tup[1] == "0" for tup in str_formatter.parse(pattern)))
+        pattern_with_format_field = pattern if has_format_field else pattern + "{0}"
+        temp = pattern_with_format_field.replace("{0}", "temp-placeholder")
+        temp = temp.replace("{", "{{").replace("}", "}}")
+        pattern_with_format_field = temp.replace("temp-placeholder", "{0}")
+        format_map[utterance] = pattern_with_format_field
     return format_map
 
 
-def remove_fields(nodes: Dict[str, List[str] | str]) -> None:
-    removed_fields_map: Dict[str, List[str] | str] = {}
-    for utterance, patternOrPatterns in nodes.items():
-        is_str = isinstance(patternOrPatterns, str)
-        patterns = [patternOrPatterns] if is_str else patternOrPatterns
-        removed_fields_patterns = []
-        for pattern in patterns:
-            pattern_with_removed_format_field = pattern.replace("{0}", "")
-            removed_fields_patterns.append(pattern_with_removed_format_field)
-        removed_fields_map[utterance] = removed_fields_patterns[0] if is_str else removed_fields_patterns
+def remove_fields(nodes: Dict[str, str]) -> None:
+    removed_fields_map: Dict[str, str] = {}
+    for utterance, pattern in nodes.items():
+        pattern_with_removed_format_field = pattern.replace("{0}", "")
+        removed_fields_map[utterance] = pattern_with_removed_format_field
     return removed_fields_map
 
 
-def load_language_commands(context: df.Context, nodes: Dict[str, List[str] | str]):
+def load_language_commands(context: df.Context, nodes: Dict[str, str]):
     format_nodes = create_format_map(nodes)
     removed_fields_map = remove_fields(nodes)
-    print(format_nodes)
-    print(removed_fields_map)
     commands = {
-        "<clip> <node>": df.Function(lambda **kw: select_node(kw["node"], "up", "block", kw["clip"])),
-        "<clip> <direction> <node>": df.Function(
-            lambda **kw: select_node(kw["node"], kw["direction"], "block", kw["clip"])
-        ),
-        "<clip> every <format_node>": df.Function(
-            lambda **kw: select_with_index_or_slice(kw["format_node"], "up", "[]", kw["clip"])
-        ),
-        "<clip> every <direction> <format_node>": df.Function(
-            lambda **kw: select_with_index_or_slice(kw["format_node"], kw["direction"], "[]", kw["clip"])
+        "<action> [<direction>] <node>": smart_action,
+        "<action> every [<direction>] <format_node>": df.Function(
+            lambda **kw: smart_action_with_index_or_slice(kw, "[]")
         ),
     }
     extras = [
-        df.Choice("clip", clip_corgi),
+        df.Choice("action", actions),
         df.Choice("node", removed_fields_map),
         df.Choice("direction", directions),
         df.Choice("format_node", format_nodes),
     ]
 
     utils.load_commands(context, commands=commands, extras=extras)
+
+utils.load_commands(
+    contexts.vscode,
+    commands=cmds,
+    extras=[
+        df.Choice("all_chars", {**keyboard.all_chars, **keyboard.digits}),
+        df.Choice("digits", keyboard.digits),
+        df.Choice("action", actions),
+        df.Choice("direction", directions),
+    ],
+    defaults={"digits": 1},
+)
