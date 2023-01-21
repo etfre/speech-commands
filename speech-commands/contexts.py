@@ -34,15 +34,13 @@ visual_studio = AppContext(title="Visual Studio") & ~vscode
 text_editor = vscode | visual_studio
 firefox = title_and_manual_context("firefox")
 chrome = title_and_manual_context("chrome")
-# windows_terminal = title_and_manual_context("evan@")
 wsl_terminal = AppContext(title="evan@")
-# git_bash = title_and_manual_context("mingw64")
 bash = wsl_terminal
 # bash = title_and_manual_context("terminal")
 terminal = title_and_manual_context("terminal")
-javascript = text_editor & (
-    AppContext(title=".js") | AppContext(title=".ts") | FuncContext(lambda *a: language == JAVASCRIPT)
-)
+
+javascript = text_editor & (AppContext(title=".js") | AppContext(title=".ts"))
+typescript = text_editor & AppContext(title=".ts")
 react = javascript
 python = text_editor & (AppContext(title=".py") | FuncContext(lambda *a: language == PYTHON))
 cpp = text_editor & (AppContext(title=".cpp") | FuncContext(lambda *a: language == CPP))

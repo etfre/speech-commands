@@ -16,11 +16,11 @@ import vscode_utils
 from breathe import Breathe
 from srabuilder.actions import surround, between
 from srabuilder import rules
-from typing import List, Dict, Any
+from typing import Any
 
 RPC_INPUT_FILE = os.path.join(tempfile.gettempdir(), "speech-commands-input.json")
 RPC_OUTPUT_FILE = os.path.join(tempfile.gettempdir(), "speech-commands-output.json")
-RESPONSES_DICT: Dict[str, Any] = {}
+RESPONSES_DICT: dict[str, Any] = {}
 
 
 def watch_output_file():
@@ -55,6 +55,8 @@ def smart_action_text(**kw):
     if action in ("start", "end"):
         params['target']['side'] = action
         action = "move"
+    # elif action == "select":
+    #     action = "extend"
     return smart_action_request(action, params)
 
 def smart_action(**kw):
@@ -70,11 +72,11 @@ def smart_action(**kw):
         action = "move"
     return smart_action_request(action, params)
 
-def smart_action_request(action: str, params: Dict):
+def smart_action_request(action: str, params: dict):
     assert "action" not in params
     return send_request("SMART_ACTION", {**params, "action": action})
 
-def select_node(pattern: str | List[str], direction: str, select_type: str, on_done: str):
+def select_node(pattern: str | list[str], direction: str, select_type: str, on_done: str):
     params = {
         "pattern": pattern,
         "direction": direction,
@@ -193,6 +195,8 @@ actions = {
     "copy": "copy",
     "cut": "cut",
     "kill": "delete",
+    "change": "change",
+    "extend": "extend",
 }
 
 
@@ -210,9 +214,9 @@ def smart_action_with_index_or_slice(kw, index_or_slice: str):
     return smart_action(**kw)
 
 
-def create_format_map(nodes: Dict[str, str]) -> Dict[str, str]:
+def create_format_map(nodes: dict[str, str]) -> dict[str, str]:
     str_formatter = string.Formatter()
-    format_map: Dict[str, str] = {}
+    format_map: dict[str, str] = {}
     for utterance, pattern in nodes.items():
         has_format_field = any((tup[1] == "0" for tup in str_formatter.parse(pattern)))
         pattern_with_format_field = pattern if has_format_field else pattern + "{0}"
@@ -223,15 +227,15 @@ def create_format_map(nodes: Dict[str, str]) -> Dict[str, str]:
     return format_map
 
 
-def remove_fields(nodes: Dict[str, str]) -> None:
-    removed_fields_map: Dict[str, str] = {}
+def remove_fields(nodes: dict[str, str]) -> None:
+    removed_fields_map: dict[str, str] = {}
     for utterance, pattern in nodes.items():
         pattern_with_removed_format_field = pattern.replace("{0}", "")
         removed_fields_map[utterance] = pattern_with_removed_format_field
     return removed_fields_map
 
 
-def load_language_commands(context: df.Context, nodes: Dict[str, str]):
+def load_language_commands(context: df.Context, nodes: dict[str, str]):
     format_nodes = create_format_map(nodes)
     removed_fields_map = remove_fields(nodes)
     commands = {

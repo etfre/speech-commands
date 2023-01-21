@@ -8,6 +8,7 @@ from typing import List, Dict
 
 node_map = {
     "block": "block",
+    "expression": "_expression",
 }
 
 vscode2.load_language_commands(contexts.ocaml & contexts.vscode, node_map)

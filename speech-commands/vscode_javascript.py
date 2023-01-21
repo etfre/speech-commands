@@ -3,28 +3,14 @@ import utils
 import re
 import contexts
 import vscode_utils
+import vscode2
+from typing import List, Dict
 
-snippets = {
-    "function": (("function ", "function("), "}"),
-    "method": (("def ", "async def "), re.compile("[^:]$")),
-    "class": ("class ", "}"),
-    "list": ("[", re.compile("[\\]]$")),
-    "dictionary": ("{", re.compile("[\\}]$")),
-    "call": (re.compile(r".*\("), re.compile("[\\)],*$")),
+node_map = {
+    "block": "block",
+    "expression": "expression",
+    # "param": "formal_parameters.*",
+    "param": "formal_parameters.*{1:-1:2}",
 }
 
-commands = {
-    "<clip> <snippets>": Function(
-        lambda **kw: vscode_utils.expand_while(
-            first_check=kw["snippets"][0],
-            last_check=kw["snippets"][1],
-            on_done=kw["clip"],
-        )
-    ),
-}
-
-extras = [
-    Choice("clip", vscode_utils.clip),
-    Choice("snippets", snippets),
-]
-utils.load_commands(contexts.javascript & contexts.vscode, commands=commands, extras=extras)
+vscode2.load_language_commands(contexts.javascript & contexts.vscode, node_map)
