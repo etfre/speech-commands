@@ -44,47 +44,35 @@ threading.Thread(target=watch_output_file, daemon=True).start()
 
 
 def smart_action_text(**kw):
+    direction = "backwards" if "back" in kw["_node"].words() else "forwards"
+    side = kw.get('side', "start" if direction == "backwards" else "end")
     params = {
-        'target': {
-            "pattern": re.escape(kw['all_chars']), 
-            "count": kw.get('digits', 1)
-        },
-        'direction': 'backwards' if 'back' in kw['_node'].words() else 'forwards'
+        "target": {"pattern": re.escape(kw["all_chars"]), "count": kw.get("digits", 1), "side": side},
+        "direction": direction,
     }
-    action = kw['action']
-    if action in ("start", "end"):
-        params['target']['side'] = action
-        action = "move"
-    # elif action == "select":
-    #     action = "extend"
+    action = kw.get("select_action", "move")
+    params['onDone'] = None if action in ("move", "select", "extend") else action
+    if action != "move":
+        action = "extend"
     return smart_action_request(action, params)
 
+
 def smart_action(**kw):
-    get_every = 'every' in kw['_node'].words()
-    node = kw['node']
-    params = {
-        'target': {"selector": node, 'getEvery': get_every},
-        'direction': kw.get('direction', 'smart')
-    }
-    action = kw['action']
+    get_every = "every" in kw["_node"].words()
+    node = kw["node"]
+    params = {"target": {"selector": node, "getEvery": get_every}, "direction": kw.get("direction", "smart")}
+    action = kw["action"]
     if action in ("start", "end"):
-        params['target']['side'] = action
+        params["target"]["side"] = action
         action = "move"
+    if action == "extend" and params["direction"] == "smart":
+        params["direction"] = "forwards"
     return smart_action_request(action, params)
+
 
 def smart_action_request(action: str, params: dict):
     assert "action" not in params
     return send_request("SMART_ACTION", {**params, "action": action})
-
-def select_node(pattern: str | list[str], direction: str, select_type: str, on_done: str):
-    params = {
-        "pattern": pattern,
-        "direction": direction,
-        "count": 1,
-        "selectType": select_type,
-        "onDone": on_done,
-    }
-    send_request("SELECT_NODE", params)
 
 
 def format_request(method: str, params=None) -> dict:
@@ -122,26 +110,15 @@ def get_response(request_id: str):
     return resp
 
 
-def move_until(char: str, count: int, include_pattern=False, reverse=False, move=False):
-    char = re.escape(char)
-    params = {
-        "count": count,
-        "pattern": char,
-        "isPatternInclude": include_pattern,
-        "reverse": reverse,
-        "isMove": move,
-    }
-    resp = send_request("SELECT_UNTIL_PATTERN", params=params)
-
-
-def select_balanced(left: str, right: str, count: int, include_pattern=False, reverse=False, move=False):
+def select_balanced(action: str, left: str, right: str, count: int, include_last_match=True):
     left = re.escape(left)
     right = re.escape(right)
     params = {
+        "action": action,
         "count": count,
         "left": left,
         "right": right,
-        "isPatternInclude": include_pattern,
+        "includeLastMatch": include_last_match,
     }
     send_request("SELECT_IN_SURROUND", params=params)
 
@@ -155,36 +132,18 @@ def execute_command(command: str, *args):
     send_request("EXECUTE_COMMAND", params=params)
 
 
-cmds = {
-    "[<digits>] take parentheses": df.Function(lambda **kw: select_balanced("(", ")", count=int(kw["digits"]))),
-    "[<digits>] [back] <action> <all_chars>": df.Function(smart_action_text),
-    # "[<digits>] pre <all_chars>": df.Function(lambda **kw: move_until(kw["all_chars"], int(kw["digits"]), move=True)),
-    # "[<digits>] take pre <all_chars>": df.Function(lambda **kw: move_until(kw["all_chars"], int(kw["digits"]))),
-    # "[<digits>] post <all_chars>": df.Function(
-    #     lambda **kw: move_until(kw["all_chars"], int(kw["digits"]), include_pattern=True, move=True)
-    # ),
-    # "[<digits>] take post <all_chars>": df.Function(
-    #     lambda **kw: move_until(kw["all_chars"], int(kw["digits"]), include_pattern=True)
-    # ),
-    # "[<digits>] back post <all_chars>": df.Function(
-    #     lambda **kw: move_until(kw["all_chars"], int(kw["digits"]), reverse=True, move=True)
-    # ),
-    # "[<digits>] take back post <all_chars>": df.Function(
-    #     lambda **kw: move_until(kw["all_chars"], int(kw["digits"]), reverse=True)
-    # ),
-    # "[<digits>] back pre <all_chars>": df.Function(
-    #     lambda **kw: move_until(
-    #         kw["all_chars"],
-    #         int(kw["digits"]),
-    #         reverse=True,
-    #         include_pattern=True,
-    #         move=True,
-    #     )
-    # ),
-    # "[<digits>] take back pre <all_chars>": df.Function(
-    #     lambda **kw: move_until(kw["all_chars"], int(kw["digits"]), reverse=True, include_pattern=True)
-    # ),
-    "go <n>": df.Function(lambda **k: go_to_line(k["n"])),
+sides = {
+    "pre": "start",
+    "post": "end",
+}
+
+select_actions = {
+    "take": "select",
+    "copy": "copy",
+    "cut": "cut",
+    "kill": "delete",
+    "change": "change",
+    "extend": "extend",
 }
 
 actions = {
@@ -199,7 +158,16 @@ actions = {
     "extend": "extend",
 }
 
-
+action_value_to_action_and_on_done = {
+    "start": (),
+    "end": (),
+    "select": (),
+    "copy": (),
+    "cut": (),
+    "delete": (),
+    "change": (),
+    "extend": (),
+}
 
 
 directions = {
@@ -209,8 +177,8 @@ directions = {
 
 
 def smart_action_with_index_or_slice(kw, index_or_slice: str):
-    kw['node'] = kw['format_node'].format(index_or_slice)
-    del kw['format_node']
+    kw["node"] = kw["format_node"].format(index_or_slice)
+    del kw["format_node"]
     return smart_action(**kw)
 
 
@@ -253,12 +221,22 @@ def load_language_commands(context: df.Context, nodes: dict[str, str]):
 
     utils.load_commands(context, commands=commands, extras=extras)
 
+cmds = {
+    "[<digits>] <action> parentheses": df.Function(
+        lambda **kw: select_balanced(kw['action'], "(", ")", count=int(kw["digits"]))
+    ),
+    "[<digits>] [back] ((<select_action> [<side>]) | <side>) <all_chars>": df.Function(smart_action_text),
+    "go <n>": df.Function(lambda **k: go_to_line(k["n"])),
+}
+
 utils.load_commands(
     contexts.vscode,
     commands=cmds,
     extras=[
         df.Choice("all_chars", {**keyboard.all_chars, **keyboard.digits}),
         df.Choice("digits", keyboard.digits),
+        df.Choice("side", sides),
+        df.Choice("select_action", select_actions),
         df.Choice("action", actions),
         df.Choice("direction", directions),
     ],
