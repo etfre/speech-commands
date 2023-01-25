@@ -14,52 +14,6 @@ COPY_COMMAND = Key(f"{CMD_OR_CTRL}-c")
 EXPAND_AND_COPY = EXPAND_COMMAND + COPY_COMMAND
 
 
-def expand_while(first_check=None, last_check=None, on_done=None):
-    assert first_check or last_check
-
-    def do_check(check, to_check: str):
-        if isinstance(check, (list, tuple)):
-            return any(do_check(x, to_check) for x in check)
-        if isinstance(check, str):
-            return to_check.lstrip().startswith(check)
-        elif isinstance(check, re.Pattern):
-            return bool(check.search(to_check.strip()))
-        elif callable(check):
-            return check(to_check)
-        else:
-            raise TypeError
-
-    expand_count = 0
-    is_match = False
-    prev = None
-    curr: str = clipboard.get() or ""
-    with clipboard.save_current():
-        while prev is None or prev != curr:
-            EXPAND_AND_COPY.execute()
-            expand_count += 1
-            time.sleep(0.1)
-            prev, curr = curr, clipboard.get()
-            if curr:
-                spl = curr.split(os.linesep)
-                first, last = spl[0], spl[-1]
-                first_match = True if first_check is None else do_check(first_check, first)
-                last_match = True if last_check is None else do_check(last_check, last)
-                is_match = first_match and last_match
-            else:
-                is_match = False
-            if is_match:
-                break
-    if is_match:
-        if on_done:
-            if isinstance(on_done, ActionBase):
-                on_done.execute()
-            elif callable(on_done):
-                on_done()
-    else:
-        for i in range(expand_count):
-            SHRINK_COMMAND.execute()
-
-
 clip = {
     "cut": Key(f"{CMD_OR_CTRL}-x"),
     "copy": Key(f"{CMD_OR_CTRL}-c") + Key("escape"),

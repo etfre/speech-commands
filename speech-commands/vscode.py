@@ -38,7 +38,7 @@ non_repeat_mapping = {
     "file explorer": "{cs-e}",
     "source control": "{cs-g}g",
     "command palette": "{f1}",
-    "rename": "{f2}",
+    # "rename": "{f2}",
     "go to definition": "{f12}",
     "comment": "{c-slash}",
     "block comment": "{as-a}",

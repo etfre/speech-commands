@@ -1,4 +1,5 @@
 backtick b { k t I k
+backticks b { k t I k s
 caret k { r V t
 cmd s i E m d
 const k A n s t

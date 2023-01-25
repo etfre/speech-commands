@@ -1,4 +1,5 @@
 import dragonfly as df
+import re
 from functools import wraps
 import errno
 import os
@@ -173,3 +174,6 @@ def timeout(seconds=10, error_message=os.strerror(errno.ETIME)):
             return result
         return wraps(func)(wrapper)
     return decorator
+
+def re_escape_or_none(val: str | None) -> str | None:
+    return None if val is None else re.escape(val)
