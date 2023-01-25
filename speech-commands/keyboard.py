@@ -55,7 +55,7 @@ specialCharMap = {
     "exclamation": "!",
     "question": "?",
     "squiggle": "~",
-    "backtick": "`",
+    "backquote": "`",
     "caret": "^",
     "tab key": "\t",
     "left brace": "{",

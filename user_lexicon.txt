@@ -1,5 +1,7 @@
 backtick b { k t I k
 backticks b { k t I k s
+backquote b { k k w 'o U t
+backquotes b { k k w 'o U t s
 caret k { r V t
 cmd s i E m d
 const k A n s t

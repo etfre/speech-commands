@@ -43,11 +43,23 @@ def watch_output_file():
 threading.Thread(target=watch_output_file, daemon=True).start()
 
 
+def commands_per_selecion(**kw):
+    action = kw.get("select_action", "move")
+    on_done = create_on_done(action)
+    move_commands, select_commands = kw['command_select_target']
+    params = {
+        "count": kw.get('digits', 1),
+        "commands": move_commands if action == "move" else select_commands,
+        "onDone": on_done
+    }
+    return send_request("EXECUTE_COMMANDS_PER_SELECTION", params)
+
 def smart_action_text(**kw):
     direction = "backwards" if "back" in kw["_node"].words() else "forwards"
     side = kw.get("side", "start" if direction == "backwards" else "end")
+    pattern = re.escape(kw["all_chars"])
     params = {
-        "target": {"pattern": re.escape(kw["all_chars"]), "count": kw.get("digits", 1), "side": side},
+        "target": {"pattern": pattern, "count": kw.get("digits", 1), "side": side},
         "direction": direction,
     }
     action = kw.get("select_action", "move")
@@ -67,7 +79,8 @@ def create_on_done(action: str):
     if action == "rename":
         return {"type": "executeCommand", "commandName": "editor.action.rename"}
 
-def smart_action(**kw):
+
+def smart_action_node(**kw):
     get_every = "every" in kw["_node"].words()
     node = kw["node"]
     params = {"target": {"selector": node, "getEvery": get_every}, "direction": kw.get("direction", "smart")}
@@ -77,8 +90,8 @@ def smart_action(**kw):
         action = "move"
     if action == "extend" and params["direction"] == "smart":
         params["direction"] = "forwards"
-    params['onDone'] = create_on_done(action)
-    if params['onDone']:
+    params["onDone"] = create_on_done(action)
+    if params["onDone"]:
         action = "select"
     return smart_action_request(action, params)
 
@@ -139,12 +152,17 @@ def select_balanced(
 
 def surround_replace(**kw):
     action = "select"
-    count = kw.get('digits', 1)
-    surround = kw.get('surround', (None, None))
+    count = kw.get("digits", 1)
+    surround = kw.get("surround", (None, None))
     left = utils.re_escape_or_none(surround[0])
     right = utils.re_escape_or_none(surround[1])
-    on_done = {"type": "surroundReplace", "left": kw['surround_literal'][0], "right": kw['surround_literal'][1]}
+    on_done = {
+        "type": "surroundReplace",
+        "left": kw["surround_literal"][0],
+        "right": kw["surround_literal"][1],
+    }
     select_balanced(action, left, right, count=count, on_done=on_done)
+
 
 def surround_insert(**kw):
     left, right = kw["surround_literal"]
@@ -163,14 +181,25 @@ def execute_command(command: str, *args):
     params = {"command": command, "args": args}
     send_request("EXECUTE_COMMAND", params=params)
 
+
+def execute_commands_each_selection(commands: list, *args):
+    params = {"commands": commands, "args": args}
+    send_request("EXECUTE_COMMANDS_EACH_SELECTION", params=params)
+
+
 other_target_ranges = {
     "word": (r"[a-z0-9_]+", r"[a-z0-9_]", r"[^a-z0-9_]"),
     "content": (r"(?<=^\s*).+$", r"(?<=^\s*).", r"$"),
 }
 
-other_target_positions = {
-    "first": r"$",
-    "content": (r"(?<=^\s*).+$", r"(?<=^\s*).", r"$"),
+command_select_targets = {
+    "first": (["cursorHome"], ["cursorHomeSelect"]),
+    "final": (["cursorEnd"], ["cursorEndSelect"]),
+    "north": (["cursorUp"], ["cursorUpSelect"]),
+    "east": (["cursorRight"], ["cursorRightSelect"]),
+    "south": (["cursorDown"], ["cursorDownSelect"]),
+    "west": (["cursorLeft"], ["cursorLeftSelect"]),
+    # "content": (["cursorEnd"], ["cursorEndSelect"]),
 }
 
 sides = {
@@ -195,10 +224,10 @@ directions = {
 }
 
 
-def smart_action_with_index_or_slice(kw, index_or_slice: str):
+def smart_action_node_with_index_or_slice(kw, index_or_slice: str):
     kw["node"] = kw["format_node"].format(index_or_slice)
     del kw["format_node"]
-    return smart_action(**kw)
+    return smart_action_node(**kw)
 
 
 def create_format_map(nodes: dict[str, str]) -> dict[str, str]:
@@ -226,9 +255,9 @@ def load_language_commands(context: df.Context, nodes: dict[str, str]):
     format_nodes = create_format_map(nodes)
     removed_fields_map = remove_fields(nodes)
     commands = {
-        "<action> [<direction>] <node>": smart_action,
+        "<action> [<direction>] <node>": smart_action_node,
         "<action> every [<direction>] <format_node>": df.Function(
-            lambda **kw: smart_action_with_index_or_slice(kw, "[]")
+            lambda **kw: smart_action_node_with_index_or_slice(kw, "[]")
         ),
     }
     extras = [
@@ -247,7 +276,7 @@ surround_literals = {
     "brackets": ("[", "]"),
     "doubles": ('"', '"'),
     "singles": ("'", "'"),
-    "backticks": ("`", "`"),
+    "backquotes": ("`", "`"),
     "(triples | (three | triple) doubles)": ('"""', '"""'),
 }
 
@@ -257,64 +286,32 @@ cmds = {
     "[<digits>] <action> [inside] <surround>": df.Function(
         lambda **kw: select_balanced(
             kw["action"],
-            None if kw["surround"][0] is None else re.escape(kw["surround"][0]),
+            None if  kw["surround"][0] is None else re.escape(kw["surround"][0]),
             None if kw["surround"][1] is None else re.escape(kw["surround"][1]),
             count=int(kw["digits"]),
             include_last_match="inside" not in kw["_node"].words(),
         )
     ),
-    "[<digits>] swap [<surround>] (for | with) <surround_literal>": df.Function(surround_replace),
+    "[<digits>] swap [<surround>] [for | with] <surround_literal>": df.Function(surround_replace),
     "surround <surround_literal>": df.Function(surround_insert),
-    "[<digits>] [back] ((<select_action> [<side>]) | <side>) <any_char>": df.Function(smart_action_text),
+    "[<digits>] [back] ((<select_action> [<side>]) | <side>) <all_chars>": df.Function(smart_action_text),
+    "[<digits>] [<select_action>] <command_select_target>": df.Function(commands_per_selecion),
     "go <n>": df.Function(lambda **k: go_to_line(k["n"])),
 }
 
-
-digitMap = {
-    "zero": 0,
-    "one": 1,
-    "too": 2,
-    "three": 3,
-    "four": 4,
-    "five": 5,
-    "six": 6,
-    "seven": 7,
-    "eight": 8,
-    "nine": 9,
-}
-
-nonZeroDigitMap = {
-    "one": 1,
-    "too": 2,
-    "three": 3,
-    "four": 4,
-    "five": 5,
-    "six": 6,
-    "seven": 7,
-    "eight": 8,
-    "nine": 9,
-}
-
-
-def parse_numrep(rep):
-    first, rest = rep
-    numstr = str(first) + "".join(str(d) for d in rest)
-    return int(numstr)
-
-
-numrep = df.Sequence(
-    [df.Choice(None, nonZeroDigitMap), df.Repetition(df.Choice(None, digitMap), min=0, max=10)],
-    name="n",
+all_chars_rep = df.Repetition(
+    df.Choice(None, {**keyboard.all_chars, **{k: str(v) for k, v in keyboard.digits.items()}}),
+    name="all_chars",
+    min=1,
+    max=16,
 )
-num = df.Modifier(numrep, parse_numrep)
-digitsrep = df.Repetition(df.Choice(None, digitMap), name="digits", min=1, max=16)
-digits = df.Modifier(digitsrep, lambda rep: "".join(map(str, rep)))
+all_chars = df.Modifier(all_chars_rep, lambda l: "".join(l))
 
 utils.load_commands(
     contexts.vscode,
     commands=cmds,
     extras=[
-        df.Choice("any_char", {**keyboard.all_chars, **keyboard.digits}),
+        all_chars,
         df.Choice("digits", keyboard.digits),
         df.Choice("side", sides),
         df.Choice("select_action", select_actions),
@@ -322,7 +319,8 @@ utils.load_commands(
         df.Choice("direction", directions),
         df.Choice("surround_literal", surround_literals),
         df.Choice("surround", surround),
-        df.Choice("other_target", other_target_ranges),
+        df.Choice("other_target_range", other_target_ranges),
+        df.Choice("command_select_target", command_select_targets),
     ],
     defaults={"digits": 1},
 )
