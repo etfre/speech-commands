@@ -82,8 +82,9 @@ def create_on_done(action: str):
 
 def smart_action_node(**kw):
     get_every = "every" in kw["_node"].words()
+    greedy = "greedy" in kw["_node"].words()
     node = kw["node"]
-    params = {"target": {"selector": node, "getEvery": get_every}, "direction": kw.get("direction", "smart")}
+    params = {"target": {"selector": node, "getEvery": get_every, "greedy": greedy}, "direction": kw.get("direction", "smart")}
     action = kw["action"]
     if action in ("start", "end"):
         params["target"]["side"] = action
@@ -255,8 +256,8 @@ def load_language_commands(context: df.Context, nodes: dict[str, str]):
     format_nodes = create_format_map(nodes)
     removed_fields_map = remove_fields(nodes)
     commands = {
-        "<action> [<direction>] <node>": smart_action_node,
-        "<action> every [<direction>] <format_node>": df.Function(
+        "<action> [greedy] [<direction>] <node>": smart_action_node,
+        "<action> (every [greedy] | [greedy] every)  [<direction>] <format_node>": df.Function(
             lambda **kw: smart_action_node_with_index_or_slice(kw, "[]")
         ),
     }
