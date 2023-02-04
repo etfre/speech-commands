@@ -7,4 +7,5 @@ pyvenv.cfg
 /.vscode
 *.pyc
 /VENV
+/.venv
 .env

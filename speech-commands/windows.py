@@ -16,6 +16,7 @@ def open_app(**kw):
     title = app.get('title', [])
     titles = title if isinstance(title, (list, tuple)) else [title]
     matches = []
+    print(titles, matches)
     for t in titles:
         matches.extend(Window.get_matching_windows(title=t))
     matches[index].set_foreground()
