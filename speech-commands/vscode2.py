@@ -263,7 +263,7 @@ def load_language_commands(context: df.Context, nodes: dict[str, str]):
         "<action> (every [greedy] | [greedy] every)  [<direction>] <format_node>": df.Function(
             lambda **kw: smart_action_node_with_index_or_slice(kw, "[]")
         ),
-        "swap ": "swap <ordinal>",
+        "swap [<ordinal>] [<direction>] <node> [with | for] [<ordinal2>] [<direction2>] <node2>": smart_action_node2,
     }
     extras = [
         df.Choice("action", actions),
@@ -271,6 +271,11 @@ def load_language_commands(context: df.Context, nodes: dict[str, str]):
         df.Choice("direction", directions),
         df.Choice("format_node", format_nodes),
         df.Choice("ordinal", ordinal),
+        df.Choice("action2", actions),
+        df.Choice("node2", removed_fields_map),
+        df.Choice("direction2", directions),
+        df.Choice("format_node2", format_nodes),
+        df.Choice("ordinal2", ordinal),
     ]
 
     utils.load_commands(context, commands=commands, extras=extras)
