@@ -224,6 +224,9 @@ directions = {
     "next": "forwards",
 }
 
+ordinal = {number: i for i, number in enumerate(
+    ("first", "second", "third" "fourth", "fifth", "sixth", "seventh", "eighth", "nineth", "tenth")
+)}
 
 def smart_action_node_with_index_or_slice(kw, index_or_slice: str):
     kw["node"] = kw["format_node"].format(index_or_slice)
@@ -260,12 +263,19 @@ def load_language_commands(context: df.Context, nodes: dict[str, str]):
         "<action> (every [greedy] | [greedy] every)  [<direction>] <format_node>": df.Function(
             lambda **kw: smart_action_node_with_index_or_slice(kw, "[]")
         ),
+        "swap [<ordinal>] [<direction>] <node> [with | for] [<ordinal2>] [<direction2>] <node2>": smart_action_node2,
     }
     extras = [
         df.Choice("action", actions),
         df.Choice("node", removed_fields_map),
         df.Choice("direction", directions),
         df.Choice("format_node", format_nodes),
+        df.Choice("ordinal", ordinal),
+        df.Choice("action2", actions),
+        df.Choice("node2", removed_fields_map),
+        df.Choice("direction2", directions),
+        df.Choice("format_node2", format_nodes),
+        df.Choice("ordinal2", ordinal),
     ]
 
     utils.load_commands(context, commands=commands, extras=extras)
