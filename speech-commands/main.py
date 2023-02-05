@@ -8,6 +8,7 @@ except KeyError:
 import threading
 import time
 import logging
+import subprocess
 import sys
 
 from dragonfly import RecognitionObserver, get_engine
@@ -37,6 +38,8 @@ import vscode_javascript
 import vscode_ocaml 
 import vscode_python
 import react
+import windows
+import applescript
 import css
 
 
@@ -49,13 +52,59 @@ class Observer(RecognitionObserver):
     def on_recognition(self, words):
         print("Recognized:", " ".join(words))
 
+# try:
+#     import readline
+# except:
+#     pass #readline not available
 
-def command_line_loop(engine):
+def run_applescript(script: str):
+    res = subprocess.run(['osascript', '-e', script, '-s', 's'], stdout=subprocess.PIPE, text=True).stdout.rstrip()
+    return res
+
+def command_line_loop(engine: get_engine):
+    script = '''
+    tell application "System Events"
+        get id of first application process whose ¬
+            frontmost is true
+    end tell
+    '''
+    script2 = '''
+    tell application "System Events" to tell application process id "577677"
+        try
+            get properties of window 1
+        on error errmess
+            log errmess
+        end try
+    end tell
+    '''
+    script3 = '''
+    global appIds
+    tell application "System Events"
+        set appIds to id of every application process whose ¬
+            background only is false
+    end tell
+    return appIds
+    '''
+    to_run = script2
     while True:
+        s = time.time()
+        res = run_applescript(to_run)
+        e = time.time()
+        print('run_applescript', res, e-s)
+
+        s = time.time()
+        res2 = applescript.AppleScript(to_run).run()
+        e = time.time()
+        print('applescript.AppleScript', res2, e-s)
+        print('')
+
+        time.sleep(5)
+        continue
         user_input = input("> ").strip()
         if user_input:
             time.sleep(4)
             try:
+                print('mimic ', user_input)
                 engine.mimic(user_input)
             except Exception as e:
                 print(e)
@@ -71,23 +120,10 @@ def main(args):
     # Register a recognition observer
     observer = Observer()
     observer.register()
-
     sleep.load_sleep_wake_grammar(True)
-
-    map_contexts_to_builder = {
-        (): global_.rule_builder(),
-        (contexts.chrome,): chrome.rule_builder(),
-        # (contexts.bash,): bash.rule_builder()
-        # .merge(python_terminal.rule_builder())
-        # .merge(windows_terminal.rule_builder()),
-        (contexts.visual_studio,): visual_studio.rule_builder(),
-    }
-    srabuilder.load_environment_grammars(map_contexts_to_builder)
     import _dictation
-
     _dictation.load_grammar()
-
-    threading.Thread(target=command_line_loop, args=(engine,), daemon=True).start()
+    # threading.Thread(target=command_line_loop, args=(engine,), daemon=True).start()
     srabuilder.run_engine()
 
 

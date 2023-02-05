@@ -4,23 +4,29 @@ from dragonfly.windows import Window
 from srabuilder import rules
 import contexts
 import applications
+import utils
 
 def set_manual_app_context(**kw):
     app = kw["applications"]
     contexts.set_manual_app_context(app['title'])
 
 def open_app(**kw):
+    import time
     # just using title, executables can be finicky with aliases
     app = kw["applications"]
-    index = kw["n"] - 1
+    target_count = kw["n"]
     title = app.get('title', [])
     titles = title if isinstance(title, (list, tuple)) else [title]
-    matches = []
-    print(titles, matches)
-    for t in titles:
-        matches.extend(Window.get_matching_windows(title=t))
-    matches[index].set_foreground()
-    
+    match_count = 0
+    for win in Window.get_all_windows():
+        win_title = win.title.lower()
+        for title in titles:
+            if title in win_title:
+                match_count += 1
+                if target_count == match_count:
+                    win.set_foreground()
+                    return
+                break
 
 
 def start_app(**kw):
@@ -57,3 +63,9 @@ def rule_builder():
         )
     )
     return builder
+
+utils.load_commands(
+    commands=non_repeat_mapping,
+    extras=[Choice("applications", applications.applications), rules.num],
+    defaults={"digits": 1},
+)

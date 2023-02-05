@@ -20,6 +20,7 @@ node_map = {
     "list comprehension": "list_comprehension",
     "dictionary comprehension": "dictionary_comprehension",
     "if state": "if_statement",
+    "item": "(list | tuple).*@isNamed",
     "while state": "while_statement",
     "for state": "for_statement",
     "try state": "try_statement",

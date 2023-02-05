@@ -1,6 +1,9 @@
 from dragonfly import *
 import srabuilder.actions
 from srabuilder import rules
+import utils
+
+CMD_OR_CTRL = "w" if utils.IS_MAC else "c"
 
 sites = {
     "hacker news": "news.ycombinator.com",
@@ -12,13 +15,14 @@ sites = {
 
 non_repeat_mapping = {
     "refresh": Key("f5"),
-    "go to <sites>": Function(
-        lambda **kw: srabuilder.actions.between(
-            Key("c-l"), Text(kw["sites"]), Key("enter")
-        ).execute()
-    ),
-    "navigate": Key("c-l"),
-    "new tab": Key("c-t"),
+    "go to <sites>": f"{{{CMD_OR_CTRL}-l}}%(sites)s{{enter}}",
+    # Function(
+    #     lambda **kw: srabuilder.actions.between(
+    #         Key("c-l"), Text(kw["sites"]), Key("enter")
+    #     ).execute()
+    # ),
+    "navigate": f"{{{CMD_OR_CTRL}-l}}",
+    "new tab": Key(f"{CMD_OR_CTRL}-t"),
 }
 
 repeat_mapping = {
@@ -29,21 +33,8 @@ repeat_mapping = {
     "go forward": Key("a-right"),
 }
 
-
-def rule_builder():
-    builder = rules.RuleBuilder()
-    extras = [Choice("sites", sites)]
-    builder.basic.append(
-        MappingRule(
-            mapping=non_repeat_mapping,
-            extras=extras,
-            exported=False,
-            name="chrome_non_repeat",
-        )
-    )
-    builder.repeat.append(
-        MappingRule(
-            mapping=repeat_mapping, extras=extras, exported=False, name="chrome_repeat"
-        )
-    )
-    return builder
+utils.load_commands(
+    commands=non_repeat_mapping,
+    repeat_commands=repeat_mapping,
+    extras=[Choice("sites", sites)],
+)

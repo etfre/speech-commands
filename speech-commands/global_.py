@@ -34,10 +34,5 @@ repeat = {
     "alt tab": '{alt:down}{tab}',
 }
 
-def rule_builder():
-    builder = rules.RuleBuilder()
-    builder.merge(windows.rule_builder())
-    return builder
-
 utils.load_commands(None, basic_mapping)
 utils.load_commands(None, repeat_commands=repeat)
