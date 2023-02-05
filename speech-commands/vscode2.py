@@ -375,7 +375,7 @@ cmds = {
     "surround <surround_literal>": df.Function(surround_insert),
     "[<digits>] [back] ((<select_action> [<side>]) | <side>) <all_chars>": df.Function(smart_action_text),
     "[<digits>] <select_action> <command_select_target>": df.Function(commands_per_selection),
-    "go <n>": df.Function(lambda **k: go_to_line(k["n"]),
+    "go <n>": df.Function(lambda **k: go_to_line(k["n"])),
 }
 
 all_chars_rep = df.Repetition(
