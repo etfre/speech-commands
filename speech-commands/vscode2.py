@@ -91,14 +91,17 @@ def create_on_done(action: str):
     if action == "rename":
         return {"type": "executeCommand", "commandName": "editor.action.rename"}
 
-
-def smart_action_node(**kw):
-    node = kw['node1']
-    print('nodre', node)
-    get_every = kw.get('every', False)
+def node_target_from_node(node: dict):
     greedy = node['greedy']
     selector = node["selector"]
     target = {"type": "nodeTarget", "selector": selector, "greedy": greedy, "direction": node['direction']}
+    return target
+
+
+def smart_action_node(**kw):
+    node = kw['node1']
+    get_every = 'every' in kw['_node'].words()
+    target = node_target_from_node(node)
     params = {"target": target, "getEvery": get_every}
     action = kw["action"]
     if action in ("start", "end"):
@@ -109,24 +112,21 @@ def smart_action_node(**kw):
     params["onDone"] = create_on_done(action)
     if params["onDone"]:
         action = "select"
+    print(params)
     return smart_action_request(action, params)
-    # get_every = kw.get('every', False)
-    # greedy = "greedy" in kw["_node"].words()
-    # node = kw["node"]
-    # target = {"type": "nodeTarget", "selector": node, "greedy": greedy, "direction": kw.get("direction", "smart")}
-    # params = {"target": target, "getEvery": get_every}
-    # action = kw["action"]
-    # if action in ("start", "end"):
-    #     target["side"] = action
-    #     action = "move"
-    # if action == "extend" and params["direction"] == "smart":
-    #     params["direction"] = "forwards"
-    # params["onDone"] = create_on_done(action)
-    # if params["onDone"]:
-    #     action = "select"
-    # return smart_action_request(action, params)
 
-def smart_action_node2(**kw):
+def swap_action(**kw):
+    target1 = node_target_from_node(kw['node1'])
+    target2 = node_target_from_node(kw['node2'])
+    get_every = 'every' in kw['_node'].words()
+    params = {
+        "target1": target1,
+        "target2": target2,
+        "getEvery": get_every,
+    }
+    return send_request("SWAP", params)
+    print(target1)
+    print(target2)
     pass
 
 def woof():
@@ -155,8 +155,6 @@ def send_request(method: str, params=None):
 
 
 def get_response(request_id: str):
-    print('get response start')
-    raise TimeoutError
     val = RESPONSES_DICT.get(request_id)
     start_time = time.time()
     while True:
@@ -269,9 +267,19 @@ ordinal_modifiers = {
 }
 
 def smart_action_node_with_index_or_slice(kw, index_or_slice: str):
-    kw["node"] = kw["format_node"].format(index_or_slice)
-    del kw["format_node"]
+    if 'format_node1' in kw:
+        kw["node1"] = {**kw["format_node1"], 'selector': kw['format_node1']['selector'].format(index_or_slice)}
+        del kw["format_node1"]
     return smart_action_node(**kw)
+
+def swap_action_with_index_or_slice(kw, index_or_slice: str):
+    if 'format_node1' in kw:
+        kw["node1"] = {**kw["format_node1"], 'selector': kw['format_node1']['selector'].format(index_or_slice)}
+        del kw["format_node1"]
+    if 'format_node2' in kw:
+        kw["node2"] = {**kw["format_node2"], 'selector': kw['format_node2']['selector'].format(index_or_slice)}
+        del kw["format_node2"]
+    return swap_action(**kw)
 
 
 def create_format_map(nodes: dict[str, str]) -> dict[str, str]:
@@ -294,15 +302,14 @@ def remove_fields(nodes: dict[str, str]) -> None:
         removed_fields_map[utterance] = pattern_with_removed_format_field
     return removed_fields_map
 
-foo = {
-
-}
     
 def node_element(name: str, node_dict):
 
     def modifier(*a, **kw):
+        # print(a, kw)
         res = a[1]
-        is_greedy = "greedy" in kw
+        words = res['_node'].words()
+        is_greedy = "greedy" in words
         return {"selector": res["node_target"], "direction": res.get('direction', 'smart'), "greedy": is_greedy}
 
     extras = [
@@ -323,21 +330,24 @@ def load_language_commands(context: df.Context, nodes: dict[str, str]):
     df.Compound
     commands = {
         "<action> <node1>": smart_action_node,
-        "swap <node1> [with | for] <node2>": smart_action_node,
-        # "<action> <every> [<greedy>]  [<direction>] <format_node>": df.Function(
-        #     lambda **kw: smart_action_node_with_index_or_slice(kw, "[]")
-        # ),
-        # "swap [<ordinal>] [<direction>] <node> [with | for] [<ordinal2>] [<direction2>] <node2>": smart_action_node2,
+        "<action> every <format_node1>": df.Function(
+            lambda **kw: smart_action_node_with_index_or_slice(kw, "[]")
+        ),
+        "swap <node1> [with | for] <node2>": swap_action,
+        "swap every <format_node1> [with | for] <format_node2>": df.Function(
+            lambda **kw: swap_action_with_index_or_slice(kw, "[]")
+        ),
     }
     extras = [
         df.Choice("action", actions),
         node_element("node1", removed_fields_map),
         node_element("node2", removed_fields_map),
+        node_element("format_node1", format_nodes),
+        node_element("format_node2", format_nodes),
         # df.Choice("greedy", {"greedy": True}),
         # df.Choice("every", {"every": True}),
         # df.Choice("node", removed_fields_map),
         # df.Choice("direction", directions),
-        # df.Choice("format_node", format_nodes),
         # df.Choice("ordinal", ordinal),
         # df.Choice("action2", actions),
         # df.Choice("node2", removed_fields_map),
