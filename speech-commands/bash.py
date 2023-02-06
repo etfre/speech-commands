@@ -180,13 +180,14 @@ basic = {
     "[<n>] climb": (Text("cd ..") + Text("/..") * Repeat(extra="n", count=-1))
     + Key("enter"),
     "git": "git ",
+    "git (branch | branches)": "git branch {enter}",
     "git commit": 'git commit -m ""{left}',
     "git push": "git push ",
     "git add": "git add ",
     "git stash": "git stash ",
     "git stash pop": "git stash pop ",
     "git checkout": "git checkout ",
-    "git checkout new branch": "git checkout -b ",
+    "git checkout new [branch]": "git checkout -b ",
     "git checkout master": "git checkout master{enter}",
     "git checkout main": "git checkout main{enter}",
     "git merge": "git merge ",
@@ -200,6 +201,9 @@ basic = {
     "docker compose down": "docker compose down {enter}",
     "docker compose run": "docker compose run",
     "git checkout <n>": wrap_n(checkout_numbered_branch),
+    "pipe": " | ",
+    "grep": "grep ",
+    "tail": "tail ",
 }
 
 repeat = {"close tab": Key("cs-w")}

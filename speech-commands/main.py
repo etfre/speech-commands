@@ -20,12 +20,13 @@ logging.basicConfig(level=logging.INFO)
 engine = srabuilder.setup_engine(silence_timeout=400, expected_error_rate_threshold=0.01, lexicon_path=os.path.join("..", "user_lexicon.txt"))
 
 import contexts
-import mouse
 import global_
+import mouse
 import python
 import cpp
 import firefox
 import chrome
+import iterm2
 import javascript
 import vscode
 import vscode2

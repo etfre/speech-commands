@@ -34,10 +34,10 @@ visual_studio = AppContext(title="Visual Studio") & ~vscode
 text_editor = vscode | visual_studio
 firefox = title_and_manual_context("firefox")
 chrome = title_and_manual_context("chrome")
+
 wsl_terminal = AppContext(title="evan@")
-bash = wsl_terminal
-# bash = title_and_manual_context("terminal")
-terminal = title_and_manual_context("terminal")
+iterm2 = AppContext(title="iterm2 terminal")
+bash = wsl_terminal | iterm2
 
 javascript = text_editor & (AppContext(title=".js") | AppContext(title=".ts"))
 typescript = text_editor & AppContext(title=".ts")

@@ -1,7 +1,7 @@
 import contextlib
 from dragonfly.windows.clipboard import Clipboard
 
-def get():
+def get() -> str:
     clip = Clipboard(from_system=True)
     return clip.get_text()
 

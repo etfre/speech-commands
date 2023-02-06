@@ -211,6 +211,12 @@ def surround_insert(**kw):
 def go_to_line(line: int):
     send_request("GO_TO_LINE", params={"line": line - 1})
 
+def set_bookmarks():
+    send_request("SET_BOOKMARKS", params={})
+
+def focus_and_select_bookmarks():
+    send_request("FOCUS_AND_SELECT_BOOKMARKS", params={})
+
 
 def execute_command(command: str, *args):
     params = {"command": command, "args": args}
@@ -371,6 +377,8 @@ cmds = {
     "[<digits>] [back] ((<select_action> [<side>]) | <side>) <all_chars>": df.Function(smart_action_text),
     "[<digits>] <select_action> <command_select_target>": df.Function(commands_per_selection),
     "go <n>": df.Function(lambda **k: go_to_line(k["n"])),
+    "mark that": df.Function(set_bookmarks),
+    "mark go": df.Function(focus_and_select_bookmarks),
 }
 
 all_chars_rep = df.Repetition(

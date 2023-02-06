@@ -35,6 +35,10 @@ def title_case(words: List[str]):
     return "".join([x.title() for x in words])
 
 
+def all_caps(words: List[str]):
+    return "_".join([x.upper() for x in words])
+
+
 def dictation_wrap(fn):
     return Function(lambda dictation: do_dictation(fn(dictation.split())))
 
@@ -71,6 +75,7 @@ def load_grammar():
         "hyphen capital <dictation>": dictation_wrap(capital_hyphen_case),
         "camel <dictation>": dictation_wrap(camel_case),
         "title <dictation>": dictation_wrap(title_case),
+        "shout <dictation>": dictation_wrap(all_caps),
         "retry that": Function(undo_dictation),
     }
 

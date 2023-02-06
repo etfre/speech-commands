@@ -167,9 +167,9 @@ grammarCfg = {
     # Navigation keys.
     "application key": release + Key("apps/3"),
     "win key": release + Key("win/3"),
-    "copy that": release + Key("c-c"),
-    "cut that": release + Key("c-x"),
-    "paste that": release + Key("c-v"),
+    "copy that": release + Key(f"{utils.CMD_OR_CTRL}-c"),
+    "cut that": release + Key(f"{utils.CMD_OR_CTRL}-x"),
+    "paste that": release + Key(f"{utils.CMD_OR_CTRL}-v"),
     "(hold|press) alt": Key("alt:down/3"),
     "release alt": Key("alt:up"),
     "(hold|press) shift": Key("shift:down/3"),

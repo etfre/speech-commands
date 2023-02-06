@@ -13,6 +13,7 @@ import platform
 from typing import Dict, Iterator
 
 IS_MAC = platform.system() == "Darwin"
+CMD_OR_CTRL = "w" if IS_MAC else "c"
 
 digitMap = {
     "zero": 0,
