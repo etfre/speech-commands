@@ -66,7 +66,7 @@ def load_grammar():
     mapping = {
         "dictate <dictation>": Function(lambda dictation: do_dictation(dictation)),
         "dictate capital <dictation>": Function(
-            lambda dictation: do_dictation(dictation)
+            lambda dictation: do_dictation(dictation.upper())
         ),
         "word <dictation>": dictation_wrap(one_word),
         "cobra <dictation>": dictation_wrap(snake_case),

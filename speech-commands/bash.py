@@ -180,7 +180,7 @@ basic = {
     "[<n>] climb": (Text("cd ..") + Text("/..") * Repeat(extra="n", count=-1))
     + Key("enter"),
     "git": "git ",
-    "git (branch | branches)": "git branch {enter}",
+    "git [list] (branch | branches)": "git branch --no-color | cat -n {enter}",
     "git commit": 'git commit -m ""{left}',
     "git push": "git push ",
     "git add": "git add ",
