@@ -106,6 +106,8 @@ if utils.IS_MAC:
     repeat_mapping["tab right"] = "{wa-right}"
     repeat_mapping["new line"] = "{w-enter}"
     repeat_mapping["new line above"] = "{ws-enter}"
+    repeat_mapping["new cursor"] = "{aw-down}"
+    repeat_mapping["new cursor above"] = "{aw-up}"
     repeat_mapping["indent"] = "{w-]}"
     repeat_mapping["out dent"] = "{w-[}"
     repeat_mapping["close tab"] = "{w-w}"

@@ -29,16 +29,17 @@ namespaces = {
 }
 
 mapping = {
+    "skiff": "if ",
     "let": "let ",
     "const": "const ",
-    "if statement": "if () {{}}{left}{enter}{up}{end}{left:3}",
+    "if state": "if () {{}}{left}{enter}{up}{end}{left:3}",
     "while loop": "while () {{}}{left}{enter}{up}{end}{left:3}",
     "for each loop": "for (const x of ) {{}}{left}{enter}{up}{end}{left:3}",
     "for loop": "for (let i = 0; i < ; i++) {{}}{left}{enter}{up}{end}{left:8}",
-    "else if [statement]": "else if () {{}}{left}{enter}{up}{end}{left:3}",
-    "else statement": "else {{}}{left}{enter}",
-    "switch statement": "switch () {{}}{left}{enter}{up}{end}{left:3}",
-    "case statement": "case :{left}",
+    "else if [state]": "else if () {{}}{left}{enter}{up}{end}{left:3}",
+    "else state": "else {{}}{left}{enter}",
+    "switch state": "switch () {{}}{left}{enter}{up}{end}{left:3}",
+    "case state": "case :{left}",
     "assign": " = ",
     "double compare": " == ",
     "compare": " === ",

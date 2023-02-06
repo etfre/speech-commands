@@ -74,6 +74,21 @@ positive_index2 = df.RuleWrap("positive_index2", df.Modifier(positive_num, lambd
 numrep = df.RuleWrap("num", df.Repetition(df.Choice(None, digitMap), min=0, max=10))
 num = df.Modifier(numrep, parse_numrep2)
 
+def _make_num_rule(first_digit_choice: dict[str, int], remaining_digits_count: int, name: str):
+    if remaining_digits_count == 0:
+        choices = df.Choice(None, first_digit_choice)
+    else:
+        choice = df.Choice(None, digitMap) 
+        second_item = choice if remaining_digits_count == 1 else df.Repetition(choice, min=0, max=remaining_digits_count)
+        choices = df.Sequence([
+            df.Choice(None, first_digit_choice),
+            second_item,
+        ])
+    return df.RuleWrap(name, df.Modifier(choices, parse_numrep))
+                       
+def make_num_rule(name: str, remaining_digits_count):
+    return _make_num_rule(nonZeroDigitMap, remaining_digits_count, name)
+                       
 
 def load_commands(
     context: df.Context | None = None,

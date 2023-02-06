@@ -58,10 +58,10 @@ threading.Thread(target=watch_output_file, daemon=True).start()
 def commands_per_selection(**kw):
     action = kw.get("select_action", "move")
     on_done = create_on_done(action)
-    move_commands, select_commands = kw['command_select_target']
+    select_commands = kw['command_select_target']
     params = {
         "count": kw.get('digits', 1),
-        "commands": move_commands if action == "move" else select_commands,
+        "commands": select_commands,
         "onDone": on_done
     }
     return send_request("EXECUTE_COMMANDS_PER_SELECTION", params)
@@ -234,12 +234,15 @@ other_target_ranges = {
 }
 
 command_select_targets = {
-    "first": (["cursorHome"], ["cursorHomeSelect"]),
-    "final": (["cursorEnd"], ["cursorEndSelect"]),
-    "north": (["cursorUp"], ["cursorUpSelect"]),
-    "east": (["cursorRight"], ["cursorRightSelect"]),
-    "south": (["cursorDown"], ["cursorDownSelect"]),
-    "west": (["cursorLeft"], ["cursorLeftSelect"]),
+    "first": ["cursorHomeSelect"],
+    "final": ["cursorEndSelect"],
+    "north": ["cursorUpSelect"],
+    "east": ["cursorRightSelect"],
+    "south": ["cursorDownSelect"],
+    "west": ["cursorLeftSelect"],
+    "line": ["expandLineSelection"],
+    "word": ["editor.action.addSelectionToNextFindMatch"],
+    "(all | everything | file)": ["editor.action.selectAll"],
     # "content": (["cursorEnd"], ["cursorEndSelect"]),
 }
 
@@ -376,7 +379,7 @@ cmds = {
     "surround <surround_literal>": df.Function(surround_insert),
     "[<digits>] [back] ((<select_action> [<side>]) | <side>) <all_chars>": df.Function(smart_action_text),
     "[<digits>] <select_action> <command_select_target>": df.Function(commands_per_selection),
-    "go <n>": df.Function(lambda **k: go_to_line(k["n"])),
+    "go <num>": df.Function(lambda **k: go_to_line(k["num"])),
     "mark that": df.Function(set_bookmarks),
     "mark go": df.Function(focus_and_select_bookmarks),
 }
@@ -403,6 +406,8 @@ utils.load_commands(
         df.Choice("surround", surround),
         df.Choice("other_target_range", other_target_ranges),
         df.Choice("command_select_target", command_select_targets),
+        utils.make_num_rule("num", 16),
+        utils.make_num_rule("n_double_digits", 1),
     ],
     defaults={"digits": 1},
 )
