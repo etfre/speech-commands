@@ -9,3 +9,4 @@ pyvenv.cfg
 /VENV
 /.venv
 .env
+.DS_STORE

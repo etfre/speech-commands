@@ -247,8 +247,8 @@ command_select_targets = {
 }
 
 sides = {
-    "pre": "start",
-    "post": "end",
+    "before": "start",
+    "after": "end",
 }
 
 select_actions = {
@@ -407,7 +407,7 @@ utils.load_commands(
         df.Choice("other_target_range", other_target_ranges),
         df.Choice("command_select_target", command_select_targets),
         utils.make_num_rule("num", 16),
-        utils.make_num_rule("n_double_digits", 1),
+        utils.make_num_rule("n_hundreds", 2),
     ],
     defaults={"digits": 1},
 )

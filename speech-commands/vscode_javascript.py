@@ -9,8 +9,10 @@ from typing import List, Dict
 node_map = {
     "block": "block",
     "expression": "expression",
-    # "param": "formal_parameters.*",
+    "ident": "identifier",
+    "number": "number",
     "param": "formal_parameters.*{1:-1:2}",
+    "string": "string",
 }
 
 vscode2.load_language_commands(contexts.javascript & contexts.vscode, node_map)

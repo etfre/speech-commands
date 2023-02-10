@@ -48,21 +48,9 @@ non_repeat_mapping = {
     "close window": Function(lambda: Window.get_foreground().close()),
 }
 
-
-def rule_builder():
-    builder = rules.RuleBuilder()
-    extras = [Choice("applications", applications.applications), rules.num]
-    defaults = {"n": 1}
-    builder.basic.append(
-        MappingRule(
-            mapping=non_repeat_mapping,
-            extras=extras,
-            exported=False,
-            defaults=defaults,
-            name="windows",
-        )
-    )
-    return builder
+if utils.IS_MAC:
+    non_repeat_mapping['next window'] = "{w-`}"
+    non_repeat_mapping['previous  window'] = "{ws-`}"
 
 utils.load_commands(
     commands=non_repeat_mapping,

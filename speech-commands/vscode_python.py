@@ -55,7 +55,7 @@ node_map = {
     "arg": "argument_list.*@isNamed",
     "call": "call",
     "attribute": "attribute",
-    "name": "identifier",
+    "ident": "identifier",
     "assignment": "assignment",
     "expression": "expression",
     "statement": "(_simple_statement | _compound_statement)",
