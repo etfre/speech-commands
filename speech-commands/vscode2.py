@@ -69,11 +69,9 @@ def commands_per_selection(**kw):
 def smart_action_text(**kw):
     direction = "backwards" if "back" in kw["_node"].words() else "forwards"
     side = kw.get("side", "start" if direction == "backwards" else "end")
-    pattern = re.escape(kw["all_chars"])
-    params = {
-        "target": {"pattern": pattern, "count": kw.get("digits", 1), "side": side},
-        "direction": direction,
-    }
+    pattern = re.escape(str(kw["all_chars"]))
+    target = {"pattern": pattern, "count": kw.get("digits", 1), "side": side, "direction": direction}
+    params = {"target": target}
     action = kw.get("select_action", "move")
     params["onDone"] = None if action in ("move", "select", "extend") else action
     if action != "move":
@@ -83,11 +81,11 @@ def smart_action_text(**kw):
 
 def create_on_done(action: str):
     if action == "cut":
-        return {"type": "executeCommand", "commandName": "editor.action.clipboardCutAction"}
+        return {"type": "cut"}
     if action == "copy":
-        return {"type": "executeCommand", "commandName": "editor.action.clipboardCopyAction"}
+        return {"type": "copy"}
     if action == "paste":
-        return {"type": "executeCommand", "commandName": "editor.action.clipboardPasteAction"}
+        return {"type": "paste"}
     if action == "rename":
         return {"type": "executeCommand", "commandName": "editor.action.rename"}
 

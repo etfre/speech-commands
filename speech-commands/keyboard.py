@@ -58,14 +58,14 @@ specialCharMap = {
     "backquote": "`",
     "caret": "^",
     "tab key": "\t",
-    "left brace": "{",
-    "left square": "[",
-    "left paren": "(",
-    "left angle": "<",
-    "right brace": "}",
-    "right square": "]",
-    "right paren": ")",
-    "right angle": ">",
+    "open brace": "{",
+    "open square": "[",
+    "open paren": "(",
+    "open angle": "<",
+    "(close | closed) brace": "}",
+    "(close | closed) square": "]",
+    "(close | closed) paren": ")",
+    "(close | closed) angle": ">",
 }
 
 # Modifiers for the press-command.
