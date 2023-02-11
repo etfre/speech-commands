@@ -80,14 +80,21 @@ def smart_action_text(**kw):
 
 
 def create_on_done(action: str):
+    if action == "move":
+        return None
     if action == "cut":
         return {"type": "cut"}
     if action == "copy":
         return {"type": "copy"}
     if action == "paste":
         return {"type": "paste"}
+    if action == "moveAndDelete":
+        return {"type": "moveAndDelete"}
+    if action == "delete":
+        return {"type": "delete"}
     if action == "rename":
         return {"type": "executeCommand", "commandName": "editor.action.rename"}
+    raise NotImplementedError(action)
 
 def update_target_with_every_setting(target: dict, get_every: bool):
     if get_every:
@@ -111,7 +118,6 @@ def smart_action_node(**kw):
     params["onDone"] = create_on_done(action)
     if params["onDone"]:
         action = "select"
-    print(params)
     return smart_action_request(action, params)
 
 def swap_action(**kw):
@@ -142,6 +148,7 @@ def format_request(method: str, params=None) -> dict:
 
 
 def send_request(method: str, params=None):
+    print(method, params)
     request = format_request(method, params)
     request_id = request["id"]
     with open(RPC_INPUT_FILE, "w") as f:
@@ -226,11 +233,6 @@ def execute_commands_each_selection(commands: list, *args):
     send_request("EXECUTE_COMMANDS_EACH_SELECTION", params=params)
 
 
-other_target_ranges = {
-    "word": (r"[a-z0-9_]+", r"[a-z0-9_]", r"[^a-z0-9_]"),
-    "content": (r"(?<=^\s*).+$", r"(?<=^\s*).", r"$"),
-}
-
 command_select_targets = {
     "first": ["cursorHomeSelect"],
     "final": ["cursorEndSelect"],
@@ -253,7 +255,8 @@ select_actions = {
     "take": "select",
     "copy": "copy",
     "cut": "cut",
-    "change": "delete",
+    "change": "moveAndDelete",
+    "remove": "delete",
     "extend": "extend",
     "rename": "rename",
 }
@@ -363,6 +366,14 @@ surround_literals = {
 
 surround = {"bounds": (None, None), **surround_literals}
 
+all_chars_rep = df.Repetition(
+    df.Choice(None, {**keyboard.all_chars, **{k: str(v) for k, v in keyboard.digits.items()}}),
+    name="all_chars",
+    min=1,
+    max=16,
+)
+all_chars = df.Modifier(all_chars_rep, lambda l: "".join(l))
+
 cmds = {
     "[<digits>] <action> [inside] <surround>": df.Function(
         lambda **kw: select_balanced(
@@ -375,20 +386,12 @@ cmds = {
     ),
     "[<digits>] swap [<surround>] [for | with] <surround_literal>": df.Function(surround_replace),
     "surround <surround_literal>": df.Function(surround_insert),
-    "[<digits>] [back] ((<select_action> [<side>]) | <side>) <all_chars>": df.Function(smart_action_text),
+    "[<digits>] [back] [<select_action>] <side> <all_chars>": df.Function(smart_action_text),
     "[<digits>] <select_action> <command_select_target>": df.Function(commands_per_selection),
     "go <num>": df.Function(lambda **k: go_to_line(k["num"])),
     "mark that": df.Function(set_bookmarks),
     "mark go": df.Function(focus_and_select_bookmarks),
 }
-
-all_chars_rep = df.Repetition(
-    df.Choice(None, {**keyboard.all_chars, **{k: str(v) for k, v in keyboard.digits.items()}}),
-    name="all_chars",
-    min=1,
-    max=16,
-)
-all_chars = df.Modifier(all_chars_rep, lambda l: "".join(l))
 
 utils.load_commands(
     contexts.vscode,
@@ -402,7 +405,6 @@ utils.load_commands(
         df.Choice("direction", directions),
         df.Choice("surround_literal", surround_literals),
         df.Choice("surround", surround),
-        df.Choice("other_target_range", other_target_ranges),
         df.Choice("command_select_target", command_select_targets),
         utils.make_num_rule("num", 16),
         utils.make_num_rule("n_hundreds", 2),
