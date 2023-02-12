@@ -202,7 +202,7 @@ basic = {
     "docker compose run": "docker compose run",
     "git checkout <n>": wrap_n(checkout_numbered_branch),
     "pipe": " | ",
-    "grep": "grep ",
+    # "grep": "grep ",
     "tail": "tail ",
 }
 

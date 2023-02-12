@@ -37,6 +37,7 @@ node_map = {
     "else body": "else_clause.block",
     "dictionary": "dictionary",
     "string": "string",
+    "two pull": "tuple",
     "assignment": "assignment",
     "left": "assignment.*[0]",
     "right": "assignment.*[2]",

@@ -7,6 +7,7 @@ import os
 import os.path
 import keyboard
 import uuid
+import itertools
 import json
 import contexts
 import queue
@@ -73,14 +74,14 @@ def smart_action_text(**kw):
     target = {"pattern": pattern, "count": kw.get("digits", 1), "side": side, "direction": direction}
     params = {"target": target}
     action = kw.get("select_action", "move")
-    params["onDone"] = None if action in ("move", "select", "extend") else action
+    params["onDone"] = create_on_done(action)
     if action != "move":
         action = "extend"
     return smart_action_request(action, params)
 
 
 def create_on_done(action: str):
-    if action == "move":
+    if action in ("move", "select", "extend"):
         return None
     if action == "cut":
         return {"type": "cut"}
@@ -109,10 +110,7 @@ def smart_action_node(**kw):
     get_every = 'every' in kw['_node'].words()
     update_target_with_every_setting(target, get_every)
     params = {"target": target, "getEvery": get_every}
-    action = kw["action"]
-    if action in ("start", "end"):
-        target["side"] = action 
-        action = "move"
+    action, target["side"] = normalise_move_action(kw["action"])
     if action == "extend" and params["direction"] == "smart":
         params["direction"] = "forwards"
     params["onDone"] = create_on_done(action)
@@ -172,7 +170,6 @@ def get_response(request_id: str):
     except KeyError:
         pass
     resp, _ = val
-    print('get response end')
     return resp
 
 
@@ -189,6 +186,24 @@ def select_balanced(
     }
     send_request("SELECT_IN_SURROUND", params=params)
 
+def surround_content_action(**kw):
+    # "[<digits>] <action> [inside] <surround>": df.Function(
+    #     lambda **kw: select_balanced(
+    #         kw["action"],
+    #         None if  kw["surround"][0] is None else re.escape(kw["surround"][0]),
+    #         None if kw["surround"][1] is None else re.escape(kw["surround"][1]),
+    #         count=int(kw["digits"]),
+    #         include_last_match="inside" not in kw["_node"].words(),
+    #     )
+    # ),
+    # FIXME
+    action = kw['action']
+    count=int(kw["digits"])
+    include_last_match="inside" not in kw["_node"].words()
+    left = None if  kw["surround"][0] is None else re.escape(kw["surround"][0]),
+    right = None if kw["surround"][1] is None else re.escape(kw["surround"][1]),
+    select_balanced(action, left, right, count=count, include_last_match=include_last_match, on_done=on_done)
+
 
 def surround_replace(**kw):
     action = "select"
@@ -200,6 +215,20 @@ def surround_replace(**kw):
         "type": "surroundReplace",
         "left": kw["surround_literal"][0],
         "right": kw["surround_literal"][1],
+    }
+    select_balanced(action, left, right, count=count, on_done=on_done)
+
+def surround_remove(**kw):
+    print('surround_remove')
+    action = "select"
+    count = kw.get("digits", 1)
+    surround = kw.get("surround", (None, None))
+    left = utils.re_escape_or_none(surround[0])
+    right = utils.re_escape_or_none(surround[1])
+    on_done = {
+        "type": "surroundReplace",
+        "left": "",
+        "right": "",
     }
     select_balanced(action, left, right, count=count, on_done=on_done)
 
@@ -222,16 +251,14 @@ def set_bookmarks():
 def focus_and_select_bookmarks():
     send_request("FOCUS_AND_SELECT_BOOKMARKS", params={})
 
-
-def execute_command(command: str, *args):
-    params = {"command": command, "args": args}
-    send_request("EXECUTE_COMMAND", params=params)
-
-
 def execute_commands_each_selection(commands: list, *args):
     params = {"commands": commands, "args": args}
     send_request("EXECUTE_COMMANDS_EACH_SELECTION", params=params)
 
+def normalise_move_action(action: str):
+    if action in sides.values():
+        return "move", action
+    return action, None
 
 command_select_targets = {
     "first": ["cursorHomeSelect"],
@@ -301,6 +328,7 @@ def node_element(name: str, node_dict, with_numbers=True):
         res = a[1]
         words = res['_node'].words()
         is_greedy = "greedy" in words
+        is_inside = "inside" in words
         node_format: str = res["node_format"]
         format_replace = ''
         if "ordinal" in res:
@@ -315,7 +343,8 @@ def node_element(name: str, node_dict, with_numbers=True):
             "_node_format": node_format,
             "selector": node_format.format(format_replace),
             "direction": res.get('direction', 'smart'),
-            "greedy": is_greedy
+            "greedy": is_greedy,
+            "inside": is_inside,
         }
     
 
@@ -330,13 +359,20 @@ def node_element(name: str, node_dict, with_numbers=True):
         ])
 
     default={"direction": "smart"}
+    options_str = options_any_order('[greedy]', '[<direction>]', '[inside]')
     if with_numbers:
-        spec = "([greedy] [<direction>] | [<direction>] [greedy]) ([<ordinal>] <node_format> | <node_format> [<digits>])"
+        spec = f"{options_str} ([<ordinal>] <node_format> | <node_format> [<digits>])"
     else:
-        spec = "([greedy] [<direction>] | [<direction>] [greedy]) <node_format>"
+        spec = f"{options_str} <node_format>"
     return df.Compound(spec, extras=extras, default=default, name=name, value_func=modifier)
 
     
+def options_any_order(*opts: list[str]):
+    combos = []
+    for combo in itertools.permutations(opts):
+        combos.append(' '.join(combo))
+    all_combos = ' | '.join(combos)
+    return f'({all_combos})'
 
 
 def load_language_commands(context: df.Context, nodes: dict[str, str]):
@@ -375,16 +411,10 @@ all_chars_rep = df.Repetition(
 all_chars = df.Modifier(all_chars_rep, lambda l: "".join(l))
 
 cmds = {
-    "[<digits>] <action> [inside] <surround>": df.Function(
-        lambda **kw: select_balanced(
-            kw["action"],
-            None if  kw["surround"][0] is None else re.escape(kw["surround"][0]),
-            None if kw["surround"][1] is None else re.escape(kw["surround"][1]),
-            count=int(kw["digits"]),
-            include_last_match="inside" not in kw["_node"].words(),
-        )
-    ),
-    "[<digits>] swap [<surround>] [for | with] <surround_literal>": df.Function(surround_replace),
+    "[<digits>] <action> [inside] <surround>": df.Function(surround_content_action),
+    # "swap parentheses for braces": df.Function(surround_replace),
+    "[<digits>] swap [<surround>] [with] <surround_literal>": df.Function(surround_replace),
+    "[<digits>] liberate <surround>": df.Function(surround_remove),
     "surround <surround_literal>": df.Function(surround_insert),
     "[<digits>] [back] [<select_action>] <side> <all_chars>": df.Function(smart_action_text),
     "[<digits>] <select_action> <command_select_target>": df.Function(commands_per_selection),

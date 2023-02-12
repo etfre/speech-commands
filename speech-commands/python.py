@@ -134,6 +134,7 @@ mapping = {
     "false": "False",
     "none": "None",
     "list": "[]{left}",
+    "two pull": "(){left}",
     "dictionary": "{{}}{left}",
     "slice": "[:]{left:2}",
     "define function": "def ():{left:3}",
