@@ -157,24 +157,28 @@ def send_request(method: str, params=None):
 def get_response(request_id: str):
     val = RESPONSES_DICT.get(request_id)
     start_time = time.time()
+    is_timeout = False
     while True:
         curr_time = time.time()
         val = RESPONSES_DICT.get(request_id)
         if val is not None:
             break
         if curr_time - start_time > 5:
-            raise TimeoutError
+            is_timeout = True
+            break
         time.sleep(0.01)
     try:
         del RESPONSES_DICT[request_id]
     except KeyError:
         pass
+    if is_timeout:
+        raise TimeoutError()
     resp, _ = val
     return resp
 
 
 def select_balanced(
-    action: str, left: str | None, right: str | None, count: int = 1, include_last_match=True, on_done=None
+    action: str, left: str | None, right: str | None, count: int = 1, side=None, include_last_match=True, on_done=None
 ):
     params = {
         "action": action,
@@ -182,27 +186,21 @@ def select_balanced(
         "left": left,
         "right": right,
         "onDone": on_done,
+        "side": side,
         "includeLastMatch": include_last_match,
     }
     send_request("SELECT_IN_SURROUND", params=params)
 
 def surround_content_action(**kw):
-    # "[<digits>] <action> [inside] <surround>": df.Function(
-    #     lambda **kw: select_balanced(
-    #         kw["action"],
-    #         None if  kw["surround"][0] is None else re.escape(kw["surround"][0]),
-    #         None if kw["surround"][1] is None else re.escape(kw["surround"][1]),
-    #         count=int(kw["digits"]),
-    #         include_last_match="inside" not in kw["_node"].words(),
-    #     )
-    # ),
-    # FIXME
-    action = kw['action']
+    action, side = normalise_move_action(kw['action'])
+    on_done = create_on_done(action)
+    if action not in ("move", "select", "extend"):
+        action = "select"
     count=int(kw["digits"])
     include_last_match="inside" not in kw["_node"].words()
-    left = None if  kw["surround"][0] is None else re.escape(kw["surround"][0]),
-    right = None if kw["surround"][1] is None else re.escape(kw["surround"][1]),
-    select_balanced(action, left, right, count=count, include_last_match=include_last_match, on_done=on_done)
+    left = None if  kw["surround"][0] is None else re.escape(kw["surround"][0])
+    right = None if kw["surround"][1] is None else re.escape(kw["surround"][1])
+    select_balanced(action, left, right, count=count, side=side, include_last_match=include_last_match, on_done=on_done)
 
 
 def surround_replace(**kw):
