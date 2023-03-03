@@ -1,7 +1,7 @@
 from dragonfly import *
 import srabuilder.actions
 from srabuilder import rules
-import utils
+import utils, contexts
 
 CMD_OR_CTRL = "w" if utils.IS_MAC else "c"
 
@@ -23,6 +23,7 @@ non_repeat_mapping = {
     # ),
     "navigate": f"{{{CMD_OR_CTRL}-l}}",
     "tab new": Key(f"{CMD_OR_CTRL}-t"),
+    "links": "{c-j}",
 }
 
 repeat_mapping = {
@@ -31,9 +32,15 @@ repeat_mapping = {
     "tab close": Key("c-w"),
     "go back": Key("a-left"),
     "go forward": Key("a-right"),
+    "higher": "{pageup}",
+    "lower": "{pagedown}",
 }
 
+if utils.IS_MAC:
+    non_repeat_mapping["refresh"] = "{w-r}"
+
 utils.load_commands(
+    context=contexts.chrome,
     commands=non_repeat_mapping,
     repeat_commands=repeat_mapping,
     extras=[Choice("sites", sites)],

@@ -12,12 +12,15 @@ basic = {
     "pane down": "{wa-down}",
     "pane left": "{wa-left}",
     "close pane": "{w-w}",
-    "tab close": "{wa-w}",
 }
 
 repeat = {
     "higher": "{w-pageup}",
     "lower": "{w-pagedown}",
+    "tab new": "{w-t}",
+    "tab close": "{wa-w}",
+    "tab left": "{sw-[}",
+    "tab right": "{sw-]}",
 }
 
 utils.load_commands(contexts.iterm2, basic, repeat_commands=repeat)
