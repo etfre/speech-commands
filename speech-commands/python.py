@@ -13,6 +13,7 @@ functions = {
     "default (dictionary | dict)": "defaultdict",
     "dear": "dir",
     "delete attribute": "delattr",
+    "dictionary": "dict",
     "enumerate": "enumerate",
     "eye d": "id",
     "filter": "filter",
@@ -101,6 +102,7 @@ modules = {
 mapping = {
     "assert": "assert ",
     "assign": " = ",
+    "arrow": " -> ",
     "break": "break",
     "compare": " == ",
     "continue": "continue",

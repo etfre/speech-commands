@@ -105,7 +105,7 @@ non_repeat_mapping = {
     "surround single": srabuilder.actions.surround("'", "'"),
     "surround double": srabuilder.actions.surround('"', '"'),
     "call that": srabuilder.actions.between(Text("()"), Key("left")),
-    "new tab": Key("c-n"),
+    "tab new": Key("c-n"),
     "line <n>": srabuilder.actions.between(
         Key("c-g"), Function(lambda **k: Text(str(k["n"])).execute()), Key("enter")
     ),
@@ -124,7 +124,7 @@ repeat_mapping = {
     "new line above": Key("cs-enter"),
     "out dent": Key("c-["),
     "indent": Key("c-]"),
-    "close tab": Key("c-w"),
+    "tab close": Key("c-w"),
     "grab": Key("c-d"),
 }
 

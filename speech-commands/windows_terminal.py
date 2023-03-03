@@ -18,13 +18,13 @@ directions = {"up": "up", "right": "right", "down": "down", "left": "left"}
 
 basic = {
     "duplicate tab": Key("cs-d"),
-    "close tab": Key("cs-w"),
+    "tab close": Key("cs-w"),
     "tab right": Key("c-tab"),
     "tab left": Key("cs-tab"),
     "new editor right": Key("as-plus"),
     "new editor down": Key("as-minus"),
     "close editor": Key("cs-w"),
-    "new tab": Key("cs-t"),
+    # "tab new": Key("cs-t"),
     "focus <directions>": Key("a-%(directions)s"),
 }
 

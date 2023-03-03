@@ -22,13 +22,13 @@ non_repeat_mapping = {
     #     ).execute()
     # ),
     "navigate": f"{{{CMD_OR_CTRL}-l}}",
-    "new tab": Key(f"{CMD_OR_CTRL}-t"),
+    "tab new": Key(f"{CMD_OR_CTRL}-t"),
 }
 
 repeat_mapping = {
     "tab left": Key("c-pageup"),
     "tab right": Key("c-pagedown"),
-    "close tab": Key("c-w"),
+    "tab close": Key("c-w"),
     "go back": Key("a-left"),
     "go forward": Key("a-right"),
 }

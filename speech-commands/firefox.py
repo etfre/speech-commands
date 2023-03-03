@@ -28,13 +28,13 @@ non_repeat_mapping = {
         ).execute()
     ),
     "navigate": Key("c-l"),
-    "new tab": "{c-t}",
+    "tab new": "{c-t}",
 }
 
 repeat_mapping = {
     "tab left": Key("c-pageup"),
     "tab right": Key("c-pagedown"),
-    "close tab": Key("c-w"),
+    "tab close": Key("c-w"),
     "go back": Key("a-left"),
     "go forward": Key("a-right"),
 }

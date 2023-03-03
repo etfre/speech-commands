@@ -162,7 +162,7 @@ basic = {
     "move": "mv ",
     "touch": "touch ",
     "tail": "tail ",
-    "make deer": "mkdir ",
+    "(make | (m k)) deer": "mkdir ",
     "echo": "echo ",
     "remove": "rm ",
     "source": "source ",
@@ -206,6 +206,6 @@ basic = {
     "tail": "tail ",
 }
 
-repeat = {"close tab": Key("cs-w")}
+repeat = {"tab close": Key("cs-w")}
 
 utils.load_commands(contexts.bash, commands=basic, repeat_commands=repeat)

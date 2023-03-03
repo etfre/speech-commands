@@ -35,7 +35,7 @@ non_repeat_mapping = {
     "cut content": "{home}{s-end}{c-v}",
     "delete content": "{home}{s-end}{backspace}",
     # "<clip> <select_actions_single>": Function(vscode_utils.do_select),
-    "file explorer": "{cs-e}",
+"file explorer": "{cs-e}",
     "source control": "{cs-g}g",
     "command palette": "{f1}",
     # "rename": "{f2}",
@@ -45,17 +45,12 @@ non_repeat_mapping = {
     "fuzzy": "{c-p}",
     "save file": f"{{{CMD_OR_CTRL}-s}}",
     "open recent": "{c-r}",
-    "shark": "{c-enter}{c-[}",
     "(search file) | (file search)": "{c-f}",
     "(search project) | (project search)": "{cs-f}",
     "(replace [in] file) | (file replace)": "{c-h}",
     "(replace [in] project) | (project replace)": "{cs-h}",
-    # "surround parentheses": surround("(", ")"),
-    # "surround blocks": surround("[", "]"),
-    # "surround single": surround("'", "'"),
-    # "surround double": surround('"', '"'),
     "call that": "(){left}",
-    "new tab": "{c-n}",
+    "tab new": "{c-n}",
     "below line <n>": between(
         Key("c-g"), Function(lambda **k: Text(str(k["n"])).execute()), Key("enter"), Key("c-enter")
     ),
@@ -70,7 +65,7 @@ if utils.IS_MAC:
     non_repeat_mapping["file explorer"] = "{ws-e}"
     non_repeat_mapping["comment"] = "{w-slash}"
     non_repeat_mapping["fuzzy"] = "{w-p}"
-    non_repeat_mapping["new tab"] = "{w-n}"
+    non_repeat_mapping["tab new"] = "{w-n}"
     non_repeat_mapping["(search file) | (file search)"] = "{w-f}"
     non_repeat_mapping["(search project) | (project search)"] = "{ws-f}"
     non_repeat_mapping["(replace [in] file) | (file replace)"] = "{wa-f}"
@@ -91,7 +86,7 @@ repeat_mapping = {
     "new line above": "{cs-enter}",
     "out dent": "{c-[}",
     "indent": "{c-]}",
-    "close tab": "{c-w}",
+    "tab close": "{c-w}",
     "grab": "{c-d}",
     "expand": "{as-right}",
     "shrink": "{as-left}",
@@ -110,7 +105,7 @@ if utils.IS_MAC:
     repeat_mapping["new cursor above"] = "{aw-up}"
     repeat_mapping["indent"] = "{w-]}"
     repeat_mapping["out dent"] = "{w-[}"
-    repeat_mapping["close tab"] = "{w-w}"
+    repeat_mapping["tab close"] = "{w-w}"
     repeat_mapping["grab"] = "{w-d}"
 
 

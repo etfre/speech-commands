@@ -1,0 +1,1 @@
+source ./.venv/bin/activate && (cd speech-commands && python main.py)
