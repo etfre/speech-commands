@@ -395,10 +395,23 @@ surround_literals = {
     "doubles": ('"', '"'),
     "singles": ("'", "'"),
     "backquotes": ("`", "`"),
+    "spaces": (" ", " "),
     "(triples | (three | triple) doubles)": ('"""', '"""'),
 }
 
 surround = {"bounds": (None, None), **surround_literals}
+
+def insert_padded(text: str):
+    start_spaces = len(text) - len(text.lstrip(' '))
+    end_spaces = len(text) - len(text.lstrip(' '))
+    return insert_text_action(text, start_spaces=start_spaces or None, end_spaces=end_spaces or None)
+
+def insert_text_action(text, start_spaces=None, end_spaces=None):
+    return df.Function(lambda **kw: insert_text(text, start_spaces, end_spaces))
+
+def insert_text(text: str, start_spaces: int | None, end_spaces: int | None):
+    params = {"text": text, "startSpaces": start_spaces, "endSpaces": end_spaces}
+    send_request("INSERT_TEXT", params)
 
 all_chars_rep = df.Repetition(
     df.Choice(None, {**keyboard.all_chars, **{k: str(v) for k, v in keyboard.digits.items()}}),

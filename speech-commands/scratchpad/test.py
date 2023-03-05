@@ -4,9 +4,10 @@ def is_odd(n):
     elif n % 2 == 0:
         return True
 
-def fibonacci(n):
-    if n == 1 or n == 2:
+def fibonacci(number):
+    if number == 1 or number == 2:
         return 1
-    return fibonacci(n - 1) + fibonacci(n - 2)
+    n
+    return fibonacci(number - 1) + fibonacci(number - 2)
 
 print(fibonacci(12))

@@ -1,5 +1,5 @@
 from dragonfly import *
-import utils
+import utils, vscode2
 import contexts
 
 functions = {
@@ -107,22 +107,22 @@ mapping = {
     "compare": " == ",
     "continue": "continue",
     "contrast": " != ",
-    "fin": " in ",
-    "fizz": " is ",
-    "from": "from ",
+    "fin": vscode2.insert_padded(" in "),
+    "fizz": vscode2.insert_padded(" is "),
+    "from": vscode2.insert_padded("from "),
     "from <modules> import": "from %(modules)s import ",
-    "import": "import ",
+    "import": vscode2.insert_padded("import "),
     "import <modules>": "import %(modules)s",
     "just <modules>": "%(modules)s",
-    "not": "not ",
-    "raise": "raise ",
+    "not": vscode2.insert_padded("not "),
+    "raise": vscode2.insert_padded("raise "),
     "list comprehension": "[x for x in ]{left}",
-    "return": "return ",
-    "skiff": "if ",
-    "else": "else ",
-    "stand": " and ",
-    "store": " or ",
-    "a sink": "async",
+    "return": vscode2.insert_padded("return "),
+    "skiff": vscode2.insert_padded("if "),
+    "else": vscode2.insert_padded("else "),
+    "stand": vscode2.insert_padded(" and "),
+    "store": vscode2.insert_padded(" or "),
+    "a sink": vscode2.insert_padded("async "),
     "<errors>": "%(errors)s",
     "if expression": " if  else {left:10}",
     "if state": "if :{left}",
@@ -151,8 +151,8 @@ mapping = {
     "read binary": "with open(, 'rb') as f:{left:14}",
     "write binary": "with open(, 'wb') as f:{left:14}",
     "with state": "with :{left}",
-    "with ": "with ",
-    "as ": " as ",
+    "with": vscode2.insert_padded("with "),
+    "as": vscode2.insert_padded(" as "),
     "for loop": "for :{left}",
     "for enumerate": "for i,  in enumerate():{left:16}",
     "index": "[]{left}",
@@ -163,7 +163,7 @@ mapping = {
     "args": '*args',
     "kwargs": '**kwargs',
     "define (initializer | constructor)": "def __init__(self):{left:2}",
-    "annotate": ": ",
+    "annotate": vscode2.insert_padded(": "),
     "this": "self",
 }
 extras = [Choice("functions", functions), Choice("errors", errors), Choice('modules', modules)]

@@ -160,6 +160,7 @@ basic = {
     "unzip": "unzip ",
     "pseudo": "sudo ",
     "move": "mv ",
+    "code": "code ",
     "touch": "touch ",
     "tail": "tail ",
     "(make | (m k)) deer": "mkdir ",

@@ -2,7 +2,7 @@ from dragonfly import *
 import srabuilder.actions
 from srabuilder import rules
 
-import utils
+import utils, vscode2
 import contexts
 
 
@@ -29,9 +29,9 @@ namespaces = {
 }
 
 mapping = {
-    "skiff": "if ",
-    "let": "let ",
-    "const": "const ",
+    "skiff": vscode2.insert_padded("if "),
+    "let": vscode2.insert_padded("let "),
+    "const": vscode2.insert_padded("const "),
     "if state": "if () {{}}{left}{enter}{up}{end}{left:3}",
     "while loop": "while () {{}}{left}{enter}{up}{end}{left:3}",
     "for loop": "for (const x of ) {{}}{left}{enter}{up}{end}{left:3}",
@@ -40,23 +40,23 @@ mapping = {
     "else state": "else {{}}{left}{enter}",
     "switch state": "switch () {{}}{left}{enter}{up}{end}{left:3}",
     "case state": "case :{left}",
-    "assign": " = ",
-    "double compare": " == ",
-    "compare": " === ",
-    "double contrast": " != ",
-    "contrast": " !== ",
+    "assign": vscode2.insert_padded(" = "),
+    "double compare": vscode2.insert_padded(" == "),
+    "compare": vscode2.insert_padded(" === "),
+    "double contrast": vscode2.insert_padded(" != "),
+    "contrast": vscode2.insert_padded(" !== "),
+    "stand": vscode2.insert_padded(" && "),
+    "store": vscode2.insert_padded(" || "),
     "not": "!",
-    "stand": " && ",
-    "store": " || ",
     "true": "true",
     "false": "false",
     "null": "null",
     "undefined": "undefined",
     "document": "document",
-    "await": "await ",
-    "a sink": "async ",
-    "new": "new ",
-    "return": "return ",
+    "await": vscode2.insert_padded("await "),
+    "a sink": vscode2.insert_padded("async "),
+    "new": vscode2.insert_padded("new "),
+    "return": vscode2.insert_padded("return "),
     "break": "break",
     "continue": "continue",
     "scope": "{{}}{left}{enter}",
@@ -80,18 +80,11 @@ mapping = {
     "template string": "``{left}",
     "export": "export ",
     "default": "default ",
-    "interface": "interface ",
     "define constructor": "constructor",
-    "type": "type ",
-    "key of": "keyof ",
-    "annotate": ": ",
     "just number": "number",
     "just string": "string",
-    "implements": "implements ",
-    "extends": "extends ",
-    "generic": "<>{left}",
-    "import statement": 'import  from "";{left:9}',
-    "import": "import ",
+    "import state": 'import  from "";{left:9}',
+    "import": vscode2.insert_padded("import "),
     "document": "document",
     "this": "this",
 }

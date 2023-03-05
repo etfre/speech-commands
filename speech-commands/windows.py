@@ -42,10 +42,10 @@ non_repeat_mapping = {
     "start <applications>": Function(start_app),
     "using <applications>": Function(set_manual_app_context),
     "using default": Function(lambda: contexts.set_manual_app_context(None)),
-    "maximize window": Function(lambda: Window.get_foreground().maximize()),
-    "minimize window": Function(lambda: Window.get_foreground().minimize()),
-    "restore window": Function(lambda: Window.get_foreground().restore()),
-    "close window": Function(lambda: Window.get_foreground().close()),
+    "window maximize": Function(lambda: Window.get_foreground().maximize()),
+    "window minimize": Function(lambda: Window.get_foreground().minimize()),
+    "window restore": Function(lambda: Window.get_foreground().restore()),
+    "window close": Function(lambda: Window.get_foreground().close()),
 }
 
 if utils.IS_MAC:
