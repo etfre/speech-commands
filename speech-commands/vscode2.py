@@ -20,6 +20,8 @@ from srabuilder import rules
 from typing import Any
 from pathlib import Path
 
+from log import logger
+
 home = os.path.expanduser("~")
 root = os.path.join(home, 'Library', 'Application Support', 'corgi')
 Path(root).mkdir(parents=True, exist_ok=True)
@@ -146,9 +148,10 @@ def format_request(method: str, params=None) -> dict:
 
 
 def send_request(method: str, params=None):
-    print(method, params)
     request = format_request(method, params)
     request_id = request["id"]
+    logger.debug("Sending request ", request)
+    print("Sending request ", request)
     with open(RPC_INPUT_FILE, "w") as f:
         json.dump(request, f)
     return get_response(request_id)
@@ -217,7 +220,6 @@ def surround_replace(**kw):
     select_balanced(action, left, right, count=count, on_done=on_done)
 
 def surround_remove(**kw):
-    print('surround_remove')
     action = "select"
     count = kw.get("digits", 1)
     surround = kw.get("surround", (None, None))
@@ -404,7 +406,7 @@ surround = {"bounds": (None, None), **surround_literals}
 def insert_padded(text: str):
     start_spaces = len(text) - len(text.lstrip(' '))
     end_spaces = len(text) - len(text.lstrip(' '))
-    return insert_text_action(text, start_spaces=start_spaces or None, end_spaces=end_spaces or None)
+    return insert_text_action(text.strip(), start_spaces=start_spaces or None, end_spaces=end_spaces or None)
 
 def insert_text_action(text, start_spaces=None, end_spaces=None):
     return df.Function(lambda **kw: insert_text(text, start_spaces, end_spaces))

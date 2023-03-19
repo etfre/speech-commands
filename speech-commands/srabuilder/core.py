@@ -30,7 +30,7 @@ if False:
 else:
     setup_log()
 
-def download_model(write_dir):
+def download_model(write_dir: str):
     model_url = 'https://github.com/daanzu/kaldi-active-grammar/releases/download/v1.8.0/kaldi_model_daanzu_20200905_1ep-biglm.zip'
     print(f'Downloading speech recognition model from {model_url}, this may take a few minutes...')
     url_open = urllib.request.urlopen(model_url)

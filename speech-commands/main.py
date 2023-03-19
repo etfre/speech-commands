@@ -1,3 +1,5 @@
+import log
+
 import os.path
 import os
 # delete so dragonfly doesn't think we're on linux for mac
@@ -7,7 +9,6 @@ except KeyError:
     pass
 import threading
 import time
-import logging
 import subprocess
 import sys
 
@@ -16,7 +17,6 @@ from dragonfly.log import setup_log
 from srabuilder import sleep, environment
 import srabuilder
 
-logging.basicConfig(level=logging.INFO)
 engine = srabuilder.setup_engine(silence_timeout=400, expected_error_rate_threshold=0.01, lexicon_path=os.path.join("..", "user_lexicon.txt"))
 
 import contexts
@@ -28,6 +28,7 @@ import firefox
 import chrome
 import iterm2
 import javascript
+import typescript
 import vscode
 import vscode2
 import visual_studio
