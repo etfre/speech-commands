@@ -415,6 +415,9 @@ def insert_text(text: str, start_spaces: int | None, end_spaces: int | None):
     params = {"text": text, "startSpaces": start_spaces, "endSpaces": end_spaces}
     send_request("INSERT_TEXT", params)
 
+def ident_autocomplete(**kw):
+    send_request("IDENT_AUTOCOMPLETE", {"text": kw.get('ident_chars', '')})
+
 all_chars_rep = df.Repetition(
     df.Choice(None, {**keyboard.all_chars, **{k: str(v) for k, v in keyboard.digits.items()}}),
     name="all_chars",
@@ -422,6 +425,14 @@ all_chars_rep = df.Repetition(
     max=16,
 )
 all_chars = df.Modifier(all_chars_rep, lambda l: "".join(l))
+
+ident_chars_rep = df.Repetition(
+    df.Choice(None, {"downscore": "_", **keyboard.letterMap, **{k: str(v) for k, v in keyboard.digits.items()}}),
+    name="ident_chars",
+    min=1,
+    max=16,
+)
+ident_chars = df.Modifier(ident_chars_rep, lambda l: "".join(l))
 
 cmds = {
     "[<digits>] <action> [inside] <surround>": df.Function(surround_content_action),
@@ -434,6 +445,7 @@ cmds = {
     "go <num>": df.Function(lambda **k: go_to_line(k["num"])),
     "mark that": df.Function(set_bookmarks),
     "mark go": df.Function(focus_and_select_bookmarks),
+    "[<ident_chars>] guess": df.Function(ident_autocomplete),
 }
 
 utils.load_commands(
@@ -441,6 +453,7 @@ utils.load_commands(
     commands=cmds,
     extras=[
         all_chars,
+        ident_chars,
         df.Choice("digits", keyboard.digits),
         df.Choice("side", sides),
         df.Choice("select_action", select_actions),
