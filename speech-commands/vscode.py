@@ -111,7 +111,7 @@ utils.load_commands(
     contexts.vscode,
     commands=non_repeat_mapping,
     extras=[
-        Choice("clip", vscode_utils .clip),
+        Choice("clip", vscode_utils.clip),
         Choice("movements_multiple", vscode_utils.movements_multiple),
         Choice("select_actions_multiple", vscode_utils.select_actions_multiple),
         Choice("movements", vscode_utils.movements),

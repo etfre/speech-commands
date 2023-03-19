@@ -282,6 +282,7 @@ select_actions = {
     "take": "select",
     "copy": "copy",
     "cut": "cut",
+    "paste": "paste",
     "change": "moveAndDelete",
     "remove": "delete",
     "extend": "extend",
