@@ -1,6 +1,5 @@
 import time
 import string
-import tempfile
 import threading
 import re
 import os
@@ -10,13 +9,9 @@ import uuid
 import itertools
 import json
 import contexts
-import queue
 import dragonfly as df
 import utils
-import vscode_utils
 from breathe import Breathe
-from srabuilder.actions import surround, between
-from srabuilder import rules
 from typing import Any
 from pathlib import Path
 
@@ -359,7 +354,7 @@ def node_element(name: str, node_dict, with_numbers=True):
             df.Choice("digits", keyboard.digits),
         ])
 
-    default={"direction": "smart"}
+    default = {"direction": "smart"}
     options_str = options_any_order('[greedy]', '[<direction>]', '[inside]')
     if with_numbers:
         spec = f"{options_str} ([<ordinal>] <node_format> | <node_format> [<digits>])"

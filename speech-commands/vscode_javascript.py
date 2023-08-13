@@ -1,8 +1,5 @@
 from dragonfly import *
-import utils
-import re
 import contexts
-import vscode_utils
 import vscode2
 from typing import List, Dict
 
