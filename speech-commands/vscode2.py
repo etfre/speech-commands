@@ -355,7 +355,7 @@ def node_element(name: str, node_dict, with_numbers=True):
         ])
 
     default = {"direction": "smart"}
-    options_str = options_any_order('[greedy]', '[<direction>]', '[inside]')
+    options_str = options_permutations('[greedy]', '[<direction>]', '[inside]')
     if with_numbers:
         spec = f"{options_str} ([<ordinal>] <node_format> | <node_format> [<digits>])"
     else:
@@ -363,8 +363,8 @@ def node_element(name: str, node_dict, with_numbers=True):
     return df.Compound(spec, extras=extras, default=default, name=name, value_func=modifier)
 
     
-def options_any_order(*opts: list[str]):
-    combos = []
+def options_permutations(*opts: str):
+    combos: list[str] = []
     for combo in itertools.permutations(opts):
         combos.append(' '.join(combo))
     all_combos = ' | '.join(combos)
