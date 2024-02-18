@@ -68,7 +68,7 @@ def smart_action_text(**kw):
     direction = "backwards" if "back" in kw["_node"].words() else "forwards"
     side = kw.get("side", "start" if direction == "backwards" else "end")
     pattern = re.escape(str(kw["all_chars"]))
-    target = {"pattern": pattern, "count": kw.get("digits", 1), "side": side, "direction": direction}
+    target = {"pattern": pattern, "count": kw.get("digits", 1), "side": side, "direction": direction, "useAntiPattern": False}
     params = {"target": target}
     action = kw.get("select_action", "move")
     params["onDone"] = create_on_done(action)
@@ -401,7 +401,7 @@ surround = {"bounds": (None, None), **surround_literals}
 
 def insert_padded(text: str):
     start_spaces = len(text) - len(text.lstrip(' '))
-    end_spaces = len(text) - len(text.lstrip(' '))
+    end_spaces = len(text) - len(text.rstrip(' '))
     return insert_text_action(text.strip(), start_spaces=start_spaces or None, end_spaces=end_spaces or None)
 
 def insert_text_action(text, start_spaces=None, end_spaces=None):

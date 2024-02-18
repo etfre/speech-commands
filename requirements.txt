@@ -1,4 +1,4 @@
+git+https://github.com/dictation-toolbox/dragonfly.git@250ecfeb590cdf73147ac6627afb70151353097b
 https://github.com/tiaxrulesall/kaldi-active-grammar/releases/download/mac-build-hotfix/kaldi_active_grammar-3.1.0-py2.py3-none-macosx_13_0_arm64.whl
-dfly-breathe
 sounddevice
 webrtcvad-wheels == 2.0.*
