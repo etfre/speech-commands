@@ -73,10 +73,6 @@ def new_basic_rule(elem):
     return BasicRule(element=elem, name=str(uuid.uuid4()))
 
 
-def module_rule(rule=None, repeat_rule=None):
-    pass
-
-
 class RuleBuilder:
     def __init__(self, basic=None, repeat=None):
         self.basic = []
@@ -134,13 +130,3 @@ class RootRule(BasicRule):
                 # sleep to avoid typing out of order. Might want to
                 # make this configurable for latency-sensitive applications like games
                 time.sleep(0.05)
-
-
-class ParsedRule(MappingRule):
-    def __init__(self, mapping, text_fn=Text, key_fn=Key, **kwargs):
-        import srabuilder.actions
-
-        parsed_mapping = {}
-        for k, v in mapping.items():
-            parsed_mapping[k] = srabuilder.actions.parse(v, text_fn=text_fn, key_fn=key_fn) if isinstance(v, str) and not isinstance(v, Text) else v
-        super().__init__(mapping=parsed_mapping, exported=False, **kwargs)

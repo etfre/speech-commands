@@ -37,7 +37,7 @@ def start_app(**kw):
         StartApp(exe).execute()
 
 
-non_repeat_mapping = {
+non_repeat_mapping: dict[str, ActionBase | str] = {
     "[<n>] open <applications>": Function(open_app),
     "start <applications>": Function(start_app),
     "using <applications>": Function(set_manual_app_context),

@@ -13,7 +13,6 @@ import shutil
 
 from dragonfly import RecognitionObserver, get_engine
 from dragonfly.log import setup_log
-from srabuilder import sleep, environment
 
 MODELS_DIR = os.path.join(str(Path.home()), '.srabuilder', 'models')
 
@@ -60,10 +59,6 @@ def setup_engine(silence_timeout=500, models_dir=MODELS_DIR, expected_error_rate
     # Call connect() now that the engine configuration is set.
     engine.connect()
     return engine
-
-def load_environment_grammars(map_contexts_to_builder):
-    envs = environment.load_environments(map_contexts_to_builder)
-    environment.load_grammars(envs)
 
 def run_engine():
     engine = get_engine()

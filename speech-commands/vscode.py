@@ -3,8 +3,7 @@ import utils
 import contexts
 from dragonfly import *
 from breathe import Breathe
-from srabuilder.actions import surround, between
-from srabuilder import rules, clipboard
+from srabuilder.actions import between
 import vscode_utils
 
 IS_MAC = utils.IS_MAC

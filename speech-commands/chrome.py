@@ -1,6 +1,4 @@
 from dragonfly import *
-import srabuilder.actions
-from srabuilder import rules
 import utils, contexts
 
 CMD_OR_CTRL = "w" if utils.IS_MAC else "c"

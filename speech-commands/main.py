@@ -14,7 +14,7 @@ import sys
 
 from dragonfly import RecognitionObserver, get_engine
 from dragonfly.log import setup_log
-from srabuilder import sleep, environment
+from srabuilder import sleep
 import srabuilder
 
 engine = srabuilder.setup_engine(silence_timeout=400, expected_error_rate_threshold=0.01, lexicon_path=os.path.join("..", "user_lexicon.txt"))

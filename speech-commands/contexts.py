@@ -9,7 +9,7 @@ OCAML = "ocaml"
 
 VISUAL_STUDIO_CODE = "VISUAL_STUDIO_CODE"
 
-language = utils.env.get("language")
+language: str | None = utils.env.get("language")
 manual_app_context = utils.env.get("app")
 
 
@@ -24,7 +24,7 @@ def set_manual_app_context(app_context: str):
     manual_app_context = app_context
 
 
-def set_language(lang: str):
+def set_language(lang: str | None):
     global language
     language = lang
 

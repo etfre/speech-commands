@@ -10,7 +10,7 @@ import srabuilder
 import srabuilder.actions
 from srabuilder import rules
 import platform
-from typing import Dict, Iterator
+from typing import Dict, Iterator, Iterable
 
 IS_MAC = platform.system() == "Darwin"
 CMD_OR_CTRL = "w" if IS_MAC else "c"
@@ -92,9 +92,9 @@ def make_num_rule(name: str, remaining_digits_count):
 
 def load_commands(
     context: df.Context | None = None,
-    commands: Dict[str, df.ActionBase | str] | None = None,
-    repeat_commands: Dict[str, df.ActionBase | str] | None = None,
-    extras: Iterator[df.ElementBase] = (),
+    commands: dict[str, df.ActionBase | str] | None = None,
+    repeat_commands: dict[str, df.ActionBase | str] | None = None,
+    extras: Iterable[df.ElementBase] = (),
     defaults=None,
     ccr=True,
 ):
@@ -124,8 +124,8 @@ def load_commands(
         )
 
 
-def read_env_file(path: str) -> dict:
-    variables = {}
+def read_env_file(path: str) -> dict[str, str]:
+    variables: dict[str, str] = {}
     with open(path) as f:
         for line in f:
             if not line.startswith("#"):
@@ -141,7 +141,7 @@ def read_env_file(path: str) -> dict:
 try:
     env = read_env_file(os.path.join("..", ".env"))
 except FileNotFoundError:
-    env = {}
+    env: dict[str, str] = {}
 
 
 def type_text(lines):

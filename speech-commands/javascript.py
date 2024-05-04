@@ -1,6 +1,4 @@
 from dragonfly import *
-import srabuilder.actions
-from srabuilder import rules
 
 import utils, vscode2
 import contexts

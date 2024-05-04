@@ -1,5 +1,4 @@
 from dragonfly import *
-from srabuilder import rules
 import utils
 import contexts
 

@@ -6,7 +6,7 @@ import os
 import contexts
 import windows
 import utils
-from srabuilder import rules, clipboard
+from srabuilder import clipboard
 
 def paste_clipboard_lines(n=1):
     spl = clipboard.get().split(os.linesep)

@@ -1,6 +1,5 @@
 from dragonfly import *
-import srabuilder.actions
-from srabuilder import rules, clipboard
+from srabuilder import clipboard
 
 import urllib.parse
 import time
@@ -205,6 +204,7 @@ basic = {
     "pipe": " | ",
     # "grep": "grep ",
     "tail": "tail ",
+    "(r m minus r f) | remove directory": "rm -rf ",
 }
 
 repeat = {"tab close": Key("cs-w")}
